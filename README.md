@@ -31,7 +31,7 @@ devtools::install_github("msperlin/eodhd2")
 eodhd2::set_token()
 #> ✔ eodhd API token set
 #> ℹ Account name: API Documentation 2 (supportlevel1@eodhistoricaldata.com)
-#> ℹ Quota: 40213 | 10000000
+#> ℹ Quota: 41545 | 10000000
 #> ℹ Subscription: demo
 #> ✖ You are using a DEMONSTRATION token for testing pourposes, with limited access to the data repositories.
 #> See <https://eodhd.com/> for registration and use function set_token(TOKEN) to set your own token.
@@ -46,9 +46,25 @@ exchange <- "US"
 df_fin <- eodhd2::get_fundamentals(ticker, exchange)
 #> 
 #> ── fetching fundamentals for ticker AAPL|US ────────────────────────────────────
-#> ! Quota status: 40213|10000000, refreshing in 11.9 hours
+#> ✔ eodhd API token set
+#> ℹ Account name: API Documentation 2 (supportlevel1@eodhistoricaldata.com)
+#> ℹ Quota: 41546 | 10000000
+#> ℹ Subscription: demo
+#> ✖ You are using a DEMONSTRATION token for testing pourposes, with limited access to the data repositories.
+#> See <https://eodhd.com/> for registration and use function set_token(TOKEN) to set your own token.
+#> ! Quota status: 41546|10000000, refreshing in 11.5 hours
 #> ✔    querying API
 #> ✔    got 13 elements in list
+```
+
+``` r
+
+names(df_fin)
+#>  [1] "General"             "Highlights"          "Valuation"          
+#>  [4] "SharesStats"         "Technicals"          "SplitsDividends"    
+#>  [7] "AnalystRatings"      "Holders"             "InsiderTransactions"
+#> [10] "ESGScores"           "outstandingShares"   "Earnings"           
+#> [13] "Financials"
 ```
 
 The goal of eodhdR is to …

@@ -7,6 +7,7 @@ get_fundamentals <- function(ticker = "AAPL",
   cli::cli_h1("fetching fundamentals for ticker {ticker}|{exchange}")
 
   token <- get_token()
+  set_token(token)
 
   if (check_quota) {
     my_quota <- get_quota(token)
