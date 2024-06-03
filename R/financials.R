@@ -1,6 +1,8 @@
 #' Parses financial data from the API
 #'
 #' @param l_out List from get_fundamental()
+#' @param type_table Type of table in output ("wide" or "long"). A wide table is a typical Excel column-oriented table where each columns is a data/year.
+#' A long type of table row-oriented, where each each point of new information is a row of the table.
 #'
 #' @export
 #'
