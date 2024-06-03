@@ -45,13 +45,72 @@ eodhd2::set_token()
 
 ## Usage
 
+## Fetching Financial Prices
+
 ```{r}
 ticker <- "AAPL"
 exchange <- "US"
 
-df_fin <- eodhd2::get_fundamentals(ticker, exchange)
+df_prices <- eodhd2::get_prices(ticker, exchange)
 
-names(df_fin)
+head(df_prices)
 ```
 
+```{r}
+library(ggplot2)
+
+p <- ggplot(df_prices, aes(y = adjusted_close, x = date)) + 
+  geom_line() + 
+  theme_light() + 
+  labs(title = "Adjusted Prices of AAPL",
+       subtitle = "Prices are adjusted to splits, dividends and other corporate events",
+       x = "Data",
+       y = "Adjusted Prices")
+
+p
+```
+## Fetching Fundamentals
+
+```{r}
+ticker <- "AAPL"
+exchange <- "US"
+
+l_fun <- eodhd2::get_fundamentals(ticker, exchange)
+
+names(l_fun)
+```
+
+## Parsing financials
+
+```{r}
+wide_financials <- eodhd2::parse_financials(l_fun, "wide")
+
+head(wide_financials)
+```
+
+
+### A nice table
+
+```{r}
+long_financials <- eodhd2::parse_financials(l_fun, "long")
+head(long_financials)
+
+my_date <- as.Date("2023-09-30")
+selected_acc <- c("date", "company_name", "frequency", "type_financial", "totalAssets", "cashAndEquivalents", "totalLiab", "totalStockholderEquity",
+                  "totalRevenue", "ebitda", "grossProfit", "netIncome")
+
+tb_fin <- long_financials |>
+  dplyr::filter(
+    name %in% selected_acc,
+    date == my_date,
+    frequency == "yearly")
+
+
+tb_fin |>
+  dplyr::group_by(type_financial) |>
+  gt::gt() |>
+  gt::tab_header("Financial Statements of AAPL",
+                 "Data for {my_date}") |>
+gt::fmt_currency(value)
+```
 

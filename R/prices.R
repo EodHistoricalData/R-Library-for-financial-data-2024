@@ -1,12 +1,23 @@
-
+#' Fetches adjusted and unadjusted stock prices prices
+#'
+#' @inheritParams get_fundamentals
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' set_token("demo")
+#' df_prices <- get_prices(ticker = "AAPL", exchange = "US")
 get_prices <- function(ticker = "AAPL",
                        exchange = "US",
-                       cache_folder = fs::path_temp("oedhd-cache")) {
+                       cache_folder = fs::path_temp("oedhd-cache"),
+                       check_quota = TRUE) {
 
 
   token <- get_token()
   my_quota <- get_quota(token)
 
+  # quota refreshes at 00:00:00 GMT
   default_tz <- "GMT"
   time_refresh <- lubridate::ymd_hms(paste0(Sys.Date()+1, " 00:00:00"),
                                      tz = default_tz)
@@ -38,38 +49,20 @@ get_prices <- function(ticker = "AAPL",
 
   url <- glue::glue('https://eodhd.com/api/eod/{ticker}.{exchange}?api_token={token}&fmt=json')
 
-  response <- httr::GET(url)
+  content <- query_api(url)
 
-  status_code <- response$status_code
-  if (status_code == 200) {
-
-    content <- httr::content(response, "text", encoding = "UTF-8")
-
-  } else if (status_code == 400) {
-
-    cli::cli_abort("got a 400 (missing parameter) return code from API (check inputs?)")
-
-  } else if (status_code == 403) {
-
-    cli::cli_abort("got a 403 (forbidden) return code from API (check your token & subscription?)")
-
-  } else {
-
-    cli::cli_abort("error on server side.. ")
-
-  }
-
-  df <- jsonlite::fromJSON(content) |>
+  df_prices <- jsonlite::fromJSON(content) |>
     dplyr::mutate(
       ticker = ticker,
       exchange = exchange
     ) |>
     dplyr::mutate(date = as.Date(date))
 
-  readr::write_rds(df, f_out)
+  readr::write_rds(df_prices, f_out)
 
-  cli::cli_alert_success("\tgot {nrow(df)} rows of prices")
+  cli::cli_alert_success("\tgot {nrow(df_prices)} rows of prices")
+  cli::cli_alert_info("\tgot daily data from {min(df_prices$date)} to {max(df_prices$date)}")
 
-  return(df)
+  return(df_prices)
 
 }
