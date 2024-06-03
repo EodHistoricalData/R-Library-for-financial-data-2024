@@ -1,3 +1,13 @@
+#' Parse api status code
+#'
+#' @param status_code returned status code
+#'
+#' @noRd
+#'
+#' @examples
+#' parse_status_code(200)
+#'
+#'
 parse_status_code <- function(status_code) {
 
   if (status_code == 200) {
@@ -21,6 +31,9 @@ parse_status_code <- function(status_code) {
   return(invisible(TRUE))
 }
 
+#' fix null values
+#'
+#' @noRd
 fix_null <- function(x) {
   if (is.null(x)) {
     return(NA)

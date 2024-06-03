@@ -1,27 +1,30 @@
-
-
-exchanges_list <- function() {
+#' Fetches exchange list from api
+#'
+#' @return a dataframe with information about available exchanges
+#' @export
+#'
+#' @examples
+#'
+#' # you need a valid token (not test) for this to work
+#' \dontrun{
+#' df_exc <- get_exchanges()
+#' }
+#'
+#'
+get_exchanges <- function() {
 
   token <- get_token()
-
   if (token == get_demo_token()) {
     cli::cli_abort("You need a proper token (not demonstration) for exchange list..")
   }
 
   url <- glue::glue(
-    'https://eodhd.com/api/exchanges-list/?api_token={token}&fmt=json'
+    '{get_base_url()}/exchanges-list/?api_token={token}&fmt=json'
   )
 
-  response <- httr::GET(url)
+  content <- query_api(url)
 
-  if (httr::http_type(response) == "application/json") {
-    content <- httr::content(response, "text", encoding = "UTF-8")
+  df_exc <- jsonlite::fromJSON(content)
 
-  } else {
-    cli::cli_abort("Error while receiving data\n")
-  }
-
-  df <- jsonlite::fromJSON(content)
-
-  return(df)
+  return(df_exc)
 }

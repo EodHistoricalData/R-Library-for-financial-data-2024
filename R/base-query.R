@@ -16,6 +16,9 @@ query_api <- function(url) {
 
 }
 
+#' base url for eodhd
+#'
+#' @noRd
 get_base_url <- function() {
   base_url <- "https://eodhd.com/api/"
   return(base_url)

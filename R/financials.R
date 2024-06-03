@@ -1,4 +1,12 @@
-
+#' Parses financial data from the API
+#'
+#' @param l_out List from get_fundamental()
+#'
+#' @export
+#'
+#' @examples
+#' # no example
+#'
 parse_financials <- function(l_out, type_table = "wide") {
 
   possible_values <- c("long", "wide")
@@ -33,7 +41,7 @@ parse_financials <- function(l_out, type_table = "wide") {
                       company_name = this_name,
                       frequency = i_freq,
                       type_financial = i_fin,
-                      .after =filing_date)
+                      .after = filing_date)
 
       df_financials <- dplyr::bind_rows(
         df_financials,
@@ -63,6 +71,9 @@ parse_financials <- function(l_out, type_table = "wide") {
 }
 
 
+#' organizes financial data
+#'
+#' @noRd
 parse_single_financial <- function(x) {
 
   elements <- purrr::map(x, fix_null)

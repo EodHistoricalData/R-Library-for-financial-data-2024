@@ -3,7 +3,7 @@
 #' Uses the token from <https://eodhd.com/cp/dashboard> to authenticate your R session. You can find your own eodhd token from the website.
 #' Althernatively, a demo token is also available for testing purposes.
 #'
-#' @param token
+#' @param token the token from eodhd. The default value is a demo token "demo", which allows for partial access to the data
 #'
 #' @return Nothing
 #' @export

@@ -1,61 +1,61 @@
+#' Fetches dividend data from eodhd
+#'
+#' @inheritParams get_fundamentals
+#'
+#' @return A dataframe with dividend information
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'  df_div <- get_dividends(ticker = "AAPL", exchange = "US")
+#' }
+get_dividends <- function(ticker = "AAPL", exchange = "US",
+                          cache_folder = get_default_cache(),
+                          check_quota = TRUE) {
 
-get_dividends <- function(ticker, exchange, token, country) {
-  cli::cli_alert_info("fetching dividends for ticker {ticker}|{exchange}|{country}")
+  cli::cli_alert_info("fetching dividends for ticker {ticker}|{exchange}")
 
-  f_out <- fs::path(
-    dir_dataout,
-    country,
-    glue::glue("{ticker}_eod-dividends.csv")
-  )
+  if (check_quota) {
+    get_quota_status()
+  }
 
-  fs::dir_create(dirname(f_out), recurse = TRUE)
+  token <- get_token()
+
+  f_out <-get_cache_file(ticker, exchange, cache_folder, "dividends")
 
   if (fs::file_exists(f_out)) {
     cli::cli_alert_success("\tfile {f_out} already exists..")
-    return(invisible(TRUE))
+
+    df_div <- read_cache(f_out)
+
+    return(df_div)
   }
 
   url <- glue::glue('https://eodhd.com/api/div/{ticker}.{exchange}?api_token={token}&fmt=json')
 
-  #mem_cache <- memoise::cache_filesystem(cache_folder)
-  #mem_get <- memoise::memoise(httr::GET, cache = mem_cache)
-  # response <- mem_get(url)
+  content <- query_api(url)
 
-  response <- httr::GET(url)
+  if (content == "[]") {
+    cli::cli_alert_danger("\tcant find dividend data for {ticker}|{exchange}")
 
-  if (httr::http_type(response) == "application/json") {
-
-    cli::cli_alert_success("\tvalid content")
-
-    content <- httr::content(response, "text", encoding = "UTF-8")
-
-    if (content == "[]") {
-      df <- dplyr::tibble()
-    } else {
-      df <- jsonlite::fromJSON(content) |>
-        dplyr::mutate(
-          ticker = ticker,
-          exchange = exchange
-        ) |>
-        dplyr::mutate(date = as.Date(date))
-    }
-
-    readr::write_csv(df, f_out)
-
-    cli::cli_alert_success("\tgot {nrow(df)} rows")
+    df_div <- dplyr::tibble()
 
   } else {
-
-    cli::cli_alert_danger("returned content for {ticker}|{country} is not json..")
-
-    cli::cli_warn("returned content for {ticker}|{country} is not json..")
-
-    fs::file_create(f_out)
-
-    df <- dplyr::tibble()
-
+    df_div <- jsonlite::fromJSON(content) |>
+      dplyr::mutate(
+        ticker = ticker,
+        exchange = exchange,
+        .after = date
+      ) |>
+      dplyr::mutate(date = as.Date(date))
   }
 
-  return(invisible(TRUE))
+  write_cache(df_div, f_out)
+
+  cli::cli_alert_success("\tgot {nrow(df_div)} rows of dividend data")
+
+
+  return(df_div)
 
 }

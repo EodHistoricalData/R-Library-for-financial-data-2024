@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # About eodhd
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/msperlin/eodhd2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/msperlin/eodhd2/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 [EODHD](https://eodhd.com/) is a private company that offers access to a set of comprehensive and high quality repositories of  financial data for over 70+ exchanges accross the world. 
@@ -91,7 +92,7 @@ head(wide_financials)
 
 ### A nice table
 
-```{r}
+```{r, message=FALSE}
 long_financials <- eodhd2::parse_financials(l_fun, "long")
 head(long_financials)
 
@@ -103,14 +104,13 @@ tb_fin <- long_financials |>
   dplyr::filter(
     name %in% selected_acc,
     date == my_date,
-    frequency == "yearly")
-
-
-tb_fin |>
+    frequency == "yearly") |>
   dplyr::group_by(type_financial) |>
   gt::gt() |>
   gt::tab_header("Financial Statements of AAPL",
                  "Data for {my_date}") |>
-gt::fmt_currency(value)
+  gt::fmt_currency(value)
+
+print(tb_fin)
 ```
 

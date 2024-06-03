@@ -1,18 +1,34 @@
 test_that("fundamentals", {
 
-  set_token()
 
-  temp_cache_folder <- fs::path_temp("oedhd-cache")
+  temp_cache_folder <- fs::path_temp("oedhd-test-cache")
 
-  l_out <- get_fundamentals(
-    ticker = "AAPL",
-    exchange = "US",
-    cache_folder = temp_cache_folder)
+  suppressMessages({
 
-  expect_true(is.list(l_out))
+    set_token()
 
-  df_financials <- parse_financials(l_out)
+    l_out1 <- get_fundamentals(
+      ticker = "AAPL",
+      exchange = "US",
+      cache_folder = temp_cache_folder)
 
-  expect_true(nrow(df_financials) > 0)
+    df_financials <- parse_financials(l_out1)
+
+    expect_true(is.list(l_out1))
+
+    expect_true(nrow(df_financials) > 0)
+
+    # run it again for cache results
+    l_out2 <- get_fundamentals(
+      ticker = "AAPL",
+      exchange = "US",
+      cache_folder = temp_cache_folder)
+
+    df_financials <- parse_financials(l_out2)
+
+    expect_true(identical(l_out1, l_out2))
+  })
+
+
 
 })

@@ -1,20 +1,31 @@
-get_tickers <- function(exchange, token) {
+#' Retrieves a list of tickers for a particular exchange
+#'
+#' @inheritParams get_fundamentals
+#'
+#' @return A dataframe with a list of tickers
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' df_tickers <- get_tickers("US")
+#' }
+get_tickers <- function(exchange = "US") {
+
+  token <- get_token()
+  if (token == get_demo_token()) {
+    cli::cli_abort("You need a proper token (not demonstration) for the ticker list..")
+  }
 
   cli::cli_alert_info("fetching tickers for {exchange}")
 
-  url <- glue::glue('https://eodhd.com/api/exchange-symbol-list/{exchange}?api_token={token}&fmt=json')
+  url <- glue::glue('{get_base_url()}/exchange-symbol-list/{exchange}?api_token={token}&fmt=json')
 
-  response <- httr::GET(url)
+  content <- query_api(url)
 
-  if (httr::http_type(response) == "application/json") {
+  df_tickers <- jsonlite::fromJSON(content)
 
-    content <- httr::content(response, "text", encoding = "UTF-8")
+  cli::cli_alert_success("got {nrow(df_tickers)} rows for {exchange}")
 
-  } else {
-    cli::cli_abort("Error while receiving data\n")
-  }
-  df <- jsonlite::fromJSON(content)
-
-  return(df)
+  return(df_tickers)
 
 }
