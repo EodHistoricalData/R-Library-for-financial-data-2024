@@ -1,10 +1,11 @@
 Package: eodhd2
 Type: Package
-Title: Second and backward-incompatible version of R package for eodhd API
+Title: Second and backward-incompatible version of R package eodhd
 Version: 0.5.0
 Author: Who wrote it
 Maintainer: Marcelo S. Perlin <marceloperlin@gmail.com>
-Description: Allows for access to EODHD api directly within an R session, also ofering data handling functinos for financial data. 
+Description: Allows for access to the eodhd data repository <https://eodhd.com/> 
+ directly within an R session, also offering data handling functios for financial data. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
