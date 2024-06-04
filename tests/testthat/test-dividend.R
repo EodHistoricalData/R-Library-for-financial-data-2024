@@ -1,4 +1,4 @@
-test_that("fetch dividends", {
+test_that("dividends", {
 
   suppressMessages({
     set_token()

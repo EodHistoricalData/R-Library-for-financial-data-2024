@@ -1,4 +1,4 @@
-test_that("fetching prices", {
+test_that("prices", {
 
   suppressMessages({
     set_token()

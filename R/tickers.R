@@ -16,7 +16,7 @@ get_tickers <- function(exchange = "US") {
     cli::cli_abort("You need a proper token (not demonstration) for the ticker list..")
   }
 
-  cli::cli_alert_info("fetching tickers for {exchange}")
+  cli::cli_h1("retrieving tickers for {exchange}")
 
   url <- glue::glue('{get_base_url()}/exchange-symbol-list/{exchange}?api_token={token}&fmt=json')
 

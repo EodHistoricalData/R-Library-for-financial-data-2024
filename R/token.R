@@ -33,8 +33,8 @@ set_token <- function(token = get_demo_token()) {
 
   if (token == get_demo_token()) {
     cli::cli_alert_danger(
-      "You are using a DEMONSTRATION token for testing pourposes, with limited access to the data repositories.
-      See <https://eodhd.com/> for registration and use function set_token(TOKEN) to set your own token.")
+      "You are using a **DEMONSTRATION** token for testing pourposes, with limited access to the data repositories.
+      See <https://eodhd.com/> for registration and, after finding your token, use it with function eodhd2::set_token(TOKEN).")
   }
 
   return(invisible(TRUE))
@@ -57,7 +57,7 @@ get_token <- function() {
   token <- Sys.getenv("eodhd-token")
 
   if (token == "") {
-    cli::cli_abort("Cant find token. Set your token with function eodhd2::set_token()")
+    cli::cli_abort("Can't find eodhd token. Set your token with function eodhd2::set_token()")
   }
 
   return(token)

@@ -15,7 +15,7 @@ get_prices <- function(ticker = "AAPL",
                        cache_folder = get_default_cache(),
                        check_quota = TRUE) {
 
-  cli::cli_h1("fetching price data for ticker {ticker}|{exchange}")
+  cli::cli_h1("retrieving price data for ticker {ticker}|{exchange}")
 
     if (check_quota) {
     get_quota_status()

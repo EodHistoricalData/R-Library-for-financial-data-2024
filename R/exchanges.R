@@ -13,7 +13,7 @@
 #'
 get_exchanges <- function() {
 
-  cli::cli_h1("fetching exchange list")
+  cli::cli_h1("retrieving exchange list")
 
   token <- get_token()
   if (token == get_demo_token()) {

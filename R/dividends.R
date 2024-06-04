@@ -19,7 +19,7 @@ get_dividends <- function(ticker = "AAPL", exchange = "US",
                           cache_folder = get_default_cache(),
                           check_quota = TRUE) {
 
-  cli::cli_h1("fetching dividends for ticker {ticker}|{exchange}")
+  cli::cli_h1("retrieving dividends for ticker {ticker}|{exchange}")
 
   if (check_quota) {
     get_quota_status()

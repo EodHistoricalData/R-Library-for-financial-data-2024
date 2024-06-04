@@ -11,7 +11,7 @@
 [![codecov](https://codecov.io/github/msperlin/eodhd2/graph/badge.svg?token=9Y5GNHALC4)](https://codecov.io/github/msperlin/eodhd2)
 <!-- badges: end -->
 
-[eodhd](https://eodhd.com/) is a private company that offers access to a
+[eodhd](https://eodhd.com/) is a private company that offers APIs to a
 set of comprehensive and high quality financial data for over 70+
 exchanges across the world. This includes:
 
@@ -22,18 +22,20 @@ exchanges across the world. This includes:
 - Valuation indicators
 - And [more](https://eodhd.com/)..
 
-Package eodhd2 is an R port of the API, allowing fast and intelligent
-access to most endpoints.
+Package eodhd2 is the second and backwards incompatible version of
+[eodhd](https://github.com/EodHistoricalData/EODHD-APIs-R-Financial-Library),
+allowing fast and intelligent access to most of the API’s endpoints.
 
 # Features
 
-- A local caching system that saves queries to the disk, improving
-  execution time and reducing api calls on repeated queries.
+- A local caching system that saves all API queries to the disk,
+  improving execution time and reducing api calls on repeated queries.
 - A quota management system, informing the user of how much of the API
   daily quota was used and how much time is left to refresh it.
 - Function for aggregating and organizing financial information into a
   single dataframe, allowing easier access to clean financial data in
-  the wide or long format.
+  the [wide or long
+  format](https://libguides.princeton.edu/R-reshape#:~:text=A%20dataset%20can%20be%20written,repeat%20in%20the%20first%20column.&text=We%20can%20see%20that%20in,value%20in%20the%20first%20column).
 
 # Installation
 
@@ -51,27 +53,32 @@ devtools::install_github("msperlin/eodhd2")
 
 After registering at the [website](https://eodhd.com/) and choosing a
 subscription, all users will authenticate an R session using a token
-from the website:
+from the website. For that:
+
+1)  Create an account at <https://eodhd.com/>
+2)  Go in “Settings” and look for your API token
 
 ![](inst/extdata/figs/token.png)
 
-The authentication is managed with function `set_token()`:
+While using `eodhd2`, all authentications are managed with function
+`eodhd2::set_token()`:
 
 ``` r
 eodhd2::set_token("YOUR_TOKEN")
 ```
 
-Alternatively, you can use the “demo” token for demonstration.
+Alternatively, while testing the API, you can use the “demo” token for
+demonstration.
 
 ``` r
 token <- eodhd2::get_demo_token()
 eodhd2::set_token(token)
 #> ✔ eodhd API token set
 #> ℹ Account name: API Documentation 2 (supportlevel1@eodhistoricaldata.com)
-#> ℹ Quota: 46886 | 10000000
+#> ℹ Quota: 57033 | 10000000
 #> ℹ Subscription: demo
-#> ✖ You are using a DEMONSTRATION token for testing pourposes, with limited access to the data repositories.
-#> See <https://eodhd.com/> for registration and use function set_token(TOKEN) to set your own token.
+#> ✖ You are using a **DEMONSTRATION** token for testing pourposes, with limited access to the data repositories.
+#> See <https://eodhd.com/> for registration and, after finding your token, use it with function eodhd2::set_token(TOKEN).
 ```
 
 # Examples
@@ -84,9 +91,9 @@ exchange <- "US"
 
 df_prices <- eodhd2::get_prices(ticker, exchange)
 #> 
-#> ── fetching price data for ticker AAPL|US ──────────────────────────────────────
-#> ! Quota status: 46887|10000000, refreshing in 9.99 hours
-#> ℹ cache file '/tmp/RtmpT3AO3H/eodhd2-cache/AAPL_US_eodhd_prices.rds' saved
+#> ── retrieving price data for ticker AAPL|US ────────────────────────────────────
+#> ! Quota status: 57034|10000000, refreshing in 6.95 hours
+#> ℹ cache file '/tmp/RtmpjBU71O/eodhd2-cache/AAPL_US_eodhd_prices.rds' saved
 #> ✔    got 10959 rows of prices
 #> ℹ    got daily data from 1980-12-12 to 2024-06-03
 ```
@@ -134,9 +141,9 @@ exchange <- "US"
 
 df_div <- eodhd2::get_dividends(ticker, exchange)
 #> 
-#> ── fetching dividends for ticker AAPL|US ───────────────────────────────────────
-#> ! Quota status: 46890|10000000, refreshing in 9.99 hours
-#> ℹ cache file '/tmp/RtmpT3AO3H/eodhd2-cache/AAPL_US_eodhd_dividends.rds' saved
+#> ── retrieving dividends for ticker AAPL|US ─────────────────────────────────────
+#> ! Quota status: 57037|10000000, refreshing in 6.94 hours
+#> ℹ cache file '/tmp/RtmpjBU71O/eodhd2-cache/AAPL_US_eodhd_dividends.rds' saved
 #> ✔    got 83 rows of dividend data
 ```
 
@@ -182,8 +189,8 @@ exchange <- "US"
 
 l_fun <- eodhd2::get_fundamentals(ticker, exchange)
 #> 
-#> ── fetching fundamentals for ticker AAPL|US ────────────────────────────────────
-#> ! Quota status: 46891|10000000, refreshing in 9.99 hours
+#> ── retrieving fundamentals for ticker AAPL|US ──────────────────────────────────
+#> ! Quota status: 57038|10000000, refreshing in 6.94 hours
 #> ✔    querying API
 #> ✔    got 13 elements in raw list
 ```

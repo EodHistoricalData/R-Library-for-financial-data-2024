@@ -1,4 +1,4 @@
-#' Low level (unexported) function for fetching data from API
+#' Low level (unexported) function for retrieving data from API
 #'
 #' @param url A well formed url
 #'

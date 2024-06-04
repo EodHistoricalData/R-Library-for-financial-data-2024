@@ -19,7 +19,7 @@ get_splits <- function(ticker = "AAPL", exchange = "US",
     cli::cli_abort("You need a proper token (not demonstration) for exchange list..")
   }
 
-  cli::cli_alert_info("fetching splits for ticker {ticker}|{exchange}")
+  cli::cli_h1("retrieving splits for ticker {ticker}|{exchange}")
 
   if (check_quota) {
     get_quota_status()

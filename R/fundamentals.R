@@ -28,7 +28,7 @@ get_fundamentals <- function(ticker = "AAPL",
                              cache_folder = get_default_cache(),
                              check_quota = TRUE) {
 
-  cli::cli_h1("fetching fundamentals for ticker {ticker}|{exchange}")
+  cli::cli_h1("retrieving fundamentals for ticker {ticker}|{exchange}")
 
   token <- get_token()
 
