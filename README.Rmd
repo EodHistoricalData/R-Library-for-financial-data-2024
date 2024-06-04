@@ -110,7 +110,7 @@ head(df_div)
 library(ggplot2)
 
 p <- ggplot(df_div, aes(y = value, x = date)) + 
-  geom_line() + 
+  geom_point(size = 1) + 
   theme_light() + 
   labs(title = "Adjusted Dividends of AAPL",
        x = "Data",
