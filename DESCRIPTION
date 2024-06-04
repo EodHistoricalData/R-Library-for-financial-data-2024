@@ -4,8 +4,8 @@ Title: Second and backward-incompatible version of R package eodhd
 Version: 0.5.0
 Author: Who wrote it
 Maintainer: Marcelo S. Perlin <marceloperlin@gmail.com>
-Description: Allows for access to the eodhd data repository <https://eodhd.com/> 
- directly within an R session, also offering data handling functios for financial data. 
+Description: R port of eodhd API <https://eodhd.com/>, extended with a cache and quota system, 
+ also offering functions for cleaning and aggregating the financial data. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
