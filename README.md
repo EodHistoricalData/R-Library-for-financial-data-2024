@@ -23,16 +23,17 @@ exchanges across the world. This includes:
 - And [more](https://eodhd.com/)..
 
 Package eodhd2 is an R port of the API, allowing fast and intelligent
-access to the most endpoints.
+access to most endpoints.
 
 # Features
 
-- Caching system that saves queries to local files, saving network
-  bandwidth and api calls
-- Quota management, informing the user of how much quota was used and
-  how much to refresh the daily quota
+- A local caching system that saves queries to the disk, improving
+  execution time and reducing api calls on repeated queries.
+- A quota management system, informing the user of how much of the API
+  daily quota was used and how much time is left to refresh it.
 - Function for aggregating and organizing financial information into a
-  single dataframe
+  single dataframe, allowing easier access to clean financial data in
+  the wide or long format.
 
 # Installation
 
@@ -67,7 +68,7 @@ token <- eodhd2::get_demo_token()
 eodhd2::set_token(token)
 #> ✔ eodhd API token set
 #> ℹ Account name: API Documentation 2 (supportlevel1@eodhistoricaldata.com)
-#> ℹ Quota: 44117 | 10000000
+#> ℹ Quota: 46886 | 10000000
 #> ℹ Subscription: demo
 #> ✖ You are using a DEMONSTRATION token for testing pourposes, with limited access to the data repositories.
 #> See <https://eodhd.com/> for registration and use function set_token(TOKEN) to set your own token.
@@ -84,8 +85,8 @@ exchange <- "US"
 df_prices <- eodhd2::get_prices(ticker, exchange)
 #> 
 #> ── fetching price data for ticker AAPL|US ──────────────────────────────────────
-#> ! Quota status: 44117|10000000, refreshing in 10.8 hours
-#> ℹ cache file '/tmp/RtmpB7Sy9K/eodhd2-cache/AAPL_US_eodhd_prices.rds' saved
+#> ! Quota status: 46887|10000000, refreshing in 9.99 hours
+#> ℹ cache file '/tmp/RtmpT3AO3H/eodhd2-cache/AAPL_US_eodhd_prices.rds' saved
 #> ✔    got 10959 rows of prices
 #> ℹ    got daily data from 1980-12-12 to 2024-06-03
 ```
@@ -134,8 +135,8 @@ exchange <- "US"
 df_div <- eodhd2::get_dividends(ticker, exchange)
 #> 
 #> ── fetching dividends for ticker AAPL|US ───────────────────────────────────────
-#> ! Quota status: 44121|10000000, refreshing in 10.8 hours
-#> ℹ cache file '/tmp/RtmpB7Sy9K/eodhd2-cache/AAPL_US_eodhd_dividends.rds' saved
+#> ! Quota status: 46890|10000000, refreshing in 9.99 hours
+#> ℹ cache file '/tmp/RtmpT3AO3H/eodhd2-cache/AAPL_US_eodhd_dividends.rds' saved
 #> ✔    got 83 rows of dividend data
 ```
 
@@ -182,7 +183,7 @@ exchange <- "US"
 l_fun <- eodhd2::get_fundamentals(ticker, exchange)
 #> 
 #> ── fetching fundamentals for ticker AAPL|US ────────────────────────────────────
-#> ! Quota status: 44122|10000000, refreshing in 10.8 hours
+#> ! Quota status: 46891|10000000, refreshing in 9.99 hours
 #> ✔    querying API
 #> ✔    got 13 elements in raw list
 ```

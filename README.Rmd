@@ -29,13 +29,13 @@ knitr::opts_chunk$set(
 * Valuation indicators
 * And [more](https://eodhd.com/)..
 
-Package eodhd2 is an R port of the API, allowing fast and intelligent access to the most endpoints. 
+Package eodhd2 is an R port of the API, allowing fast and intelligent access to most endpoints. 
 
 # Features
 
-- Caching system that saves queries to local files, saving network bandwidth and api calls
-- Quota management, informing the user of how much quota was used and how much to refresh the daily quota
-- Function for aggregating and organizing financial information into a single dataframe
+- A local caching system that saves queries to the disk, improving execution time and reducing api calls on repeated queries.
+- A quota management system, informing the user of how much of the API daily quota was used and how much time is left to refresh it.
+- Function for aggregating and organizing financial information into a single dataframe, allowing easier access to clean financial data in the wide or long format.
 
 
 # Installation
