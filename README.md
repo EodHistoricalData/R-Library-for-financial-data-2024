@@ -8,6 +8,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/msperlin/eodhd2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/msperlin/eodhd2/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/github/msperlin/eodhd2/graph/badge.svg?token=9Y5GNHALC4)](https://codecov.io/github/msperlin/eodhd2)
 <!-- badges: end -->
 
 [eodhd](https://eodhd.com/) is a private company that offers access to a
@@ -66,7 +67,7 @@ token <- eodhd2::get_demo_token()
 eodhd2::set_token(token)
 #> ✔ eodhd API token set
 #> ℹ Account name: API Documentation 2 (supportlevel1@eodhistoricaldata.com)
-#> ℹ Quota: 42667 | 10000000
+#> ℹ Quota: 44117 | 10000000
 #> ℹ Subscription: demo
 #> ✖ You are using a DEMONSTRATION token for testing pourposes, with limited access to the data repositories.
 #> See <https://eodhd.com/> for registration and use function set_token(TOKEN) to set your own token.
@@ -83,8 +84,8 @@ exchange <- "US"
 df_prices <- eodhd2::get_prices(ticker, exchange)
 #> 
 #> ── fetching price data for ticker AAPL|US ──────────────────────────────────────
-#> ! Quota status: 42669|10000000, refreshing in 11.1 hours
-#> ℹ cache file '/tmp/Rtmp0nahhV/eodhd2-cache/AAPL_US_eodhd_prices.rds' saved
+#> ! Quota status: 44117|10000000, refreshing in 10.8 hours
+#> ℹ cache file '/tmp/RtmpB7Sy9K/eodhd2-cache/AAPL_US_eodhd_prices.rds' saved
 #> ✔    got 10959 rows of prices
 #> ℹ    got daily data from 1980-12-12 to 2024-06-03
 ```
@@ -133,8 +134,8 @@ exchange <- "US"
 df_div <- eodhd2::get_dividends(ticker, exchange)
 #> 
 #> ── fetching dividends for ticker AAPL|US ───────────────────────────────────────
-#> ! Quota status: 42674|10000000, refreshing in 11.1 hours
-#> ℹ cache file '/tmp/Rtmp0nahhV/eodhd2-cache/AAPL_US_eodhd_dividends.rds' saved
+#> ! Quota status: 44121|10000000, refreshing in 10.8 hours
+#> ℹ cache file '/tmp/RtmpB7Sy9K/eodhd2-cache/AAPL_US_eodhd_dividends.rds' saved
 #> ✔    got 83 rows of dividend data
 ```
 
@@ -161,7 +162,7 @@ head(df_div)
 library(ggplot2)
 
 p <- ggplot(df_div, aes(y = value, x = date)) + 
-  geom_line() + 
+  geom_point(size = 1) + 
   theme_light() + 
   labs(title = "Adjusted Dividends of AAPL",
        x = "Data",
@@ -181,7 +182,7 @@ exchange <- "US"
 l_fun <- eodhd2::get_fundamentals(ticker, exchange)
 #> 
 #> ── fetching fundamentals for ticker AAPL|US ────────────────────────────────────
-#> ! Quota status: 42675|10000000, refreshing in 11.1 hours
+#> ! Quota status: 44122|10000000, refreshing in 10.8 hours
 #> ✔    querying API
 #> ✔    got 13 elements in raw list
 ```

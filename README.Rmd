@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/msperlin/eodhd2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/msperlin/eodhd2/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/github/msperlin/eodhd2/graph/badge.svg?token=9Y5GNHALC4)](https://codecov.io/github/msperlin/eodhd2)
 <!-- badges: end -->
 
 [eodhd](https://eodhd.com/) is a private company that offers access to a set of comprehensive and high quality financial data for over 70+ exchanges across the world. This includes:
