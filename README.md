@@ -10,16 +10,30 @@
 [![R-CMD-check](https://github.com/msperlin/eodhd2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/msperlin/eodhd2/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-[EODHD](https://eodhd.com/) is a private company that offers access to a
-set of comprehensive and high quality repositories of financial data for
-over 70+ exchanges accross the world.
+[eodhd](https://eodhd.com/) is a private company that offers access to a
+set of comprehensive and high quality financial data for over 70+
+exchanges across the world. This includes:
+
+- Adjusted and unadjusted prices of financial contracts (equity, funds,
+  ETF, cryptocurrencies, ..)
+- Financial information of companies (Balance Sheet, Income/Cashflow
+  statement)
+- Valuation indicators
+- And [more](https://eodhd.com/)..
+
+Package eodhd2 is an R port of the API, allowing fast and intelligent
+access to the most endpoints.
 
 # Features
 
-- cache
-- quota management
+- Caching system that saves queries to local files, saving network
+  bandwidth and api calls
+- Quota management, informing the user of how much quota was used and
+  how much to refresh the daily quota
+- Function for aggregating and organizing financial information into a
+  single dataframe
 
-## Installation
+# Installation
 
 ``` r
 # not yet in CRAN
@@ -29,21 +43,38 @@ over 70+ exchanges accross the world.
 devtools::install_github("msperlin/eodhd2")
 ```
 
+# Usage
+
 ## Authentication
 
+After registering at the [website](https://eodhd.com/) and choosing a
+subscription, all users will authenticate an R session using a token
+from the website:
+
+![](inst/extdata/figs/token.png)
+
+The authentication is managed with function `set_token()`:
+
 ``` r
-eodhd2::set_token()
+eodhd2::set_token("YOUR_TOKEN")
+```
+
+Alternatively, you can use the “demo” token for demonstration.
+
+``` r
+token <- eodhd2::get_demo_token()
+eodhd2::set_token(token)
 #> ✔ eodhd API token set
 #> ℹ Account name: API Documentation 2 (supportlevel1@eodhistoricaldata.com)
-#> ℹ Quota: 41412 | 10000000
+#> ℹ Quota: 42667 | 10000000
 #> ℹ Subscription: demo
 #> ✖ You are using a DEMONSTRATION token for testing pourposes, with limited access to the data repositories.
 #> See <https://eodhd.com/> for registration and use function set_token(TOKEN) to set your own token.
 ```
 
-## Usage
+# Examples
 
-## Fetching Financial Prices
+## Retrieving Financial Prices
 
 ``` r
 ticker <- "AAPL"
@@ -52,8 +83,8 @@ exchange <- "US"
 df_prices <- eodhd2::get_prices(ticker, exchange)
 #> 
 #> ── fetching price data for ticker AAPL|US ──────────────────────────────────────
-#> ! Quota status: 41412|10000000, refreshing in 11.4 hours
-#> ℹ cache file '/tmp/RtmpraRIWp/eodhd2-cache/AAPL_US_eodhd_prices.rds' saved
+#> ! Quota status: 42669|10000000, refreshing in 11.1 hours
+#> ℹ cache file '/tmp/Rtmp0nahhV/eodhd2-cache/AAPL_US_eodhd_prices.rds' saved
 #> ✔    got 10959 rows of prices
 #> ℹ    got daily data from 1980-12-12 to 2024-06-03
 ```
@@ -91,8 +122,57 @@ p <- ggplot(df_prices, aes(y = adjusted_close, x = date)) +
 p
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" /> \##
-Fetching Fundamentals
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+
+## Retrieving Dividends
+
+``` r
+ticker <- "AAPL"
+exchange <- "US"
+
+df_div <- eodhd2::get_dividends(ticker, exchange)
+#> 
+#> ── fetching dividends for ticker AAPL|US ───────────────────────────────────────
+#> ! Quota status: 42674|10000000, refreshing in 11.1 hours
+#> ℹ cache file '/tmp/Rtmp0nahhV/eodhd2-cache/AAPL_US_eodhd_dividends.rds' saved
+#> ✔    got 83 rows of dividend data
+```
+
+``` r
+
+head(df_div)
+#>         date ticker exchange declarationDate recordDate paymentDate period
+#> 1 1987-05-11   AAPL       US            <NA>       <NA>        <NA>   <NA>
+#> 2 1987-08-10   AAPL       US            <NA>       <NA>        <NA>   <NA>
+#> 3 1987-11-17   AAPL       US            <NA>       <NA>        <NA>   <NA>
+#> 4 1988-02-12   AAPL       US            <NA>       <NA>        <NA>   <NA>
+#> 5 1988-05-16   AAPL       US            <NA>       <NA>        <NA>   <NA>
+#> 6 1988-08-15   AAPL       US            <NA>       <NA>        <NA>   <NA>
+#>     value unadjustedValue currency
+#> 1 0.00054         0.12096      USD
+#> 2 0.00054         0.06048      USD
+#> 3 0.00071         0.07952      USD
+#> 4 0.00071         0.07952      USD
+#> 5 0.00071         0.07952      USD
+#> 6 0.00071         0.07952      USD
+```
+
+``` r
+library(ggplot2)
+
+p <- ggplot(df_div, aes(y = value, x = date)) + 
+  geom_line() + 
+  theme_light() + 
+  labs(title = "Adjusted Dividends of AAPL",
+       x = "Data",
+       y = "Adjusted Dividends")
+
+p
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+
+## Retrieving Fundamentals
 
 ``` r
 ticker <- "AAPL"
@@ -101,7 +181,7 @@ exchange <- "US"
 l_fun <- eodhd2::get_fundamentals(ticker, exchange)
 #> 
 #> ── fetching fundamentals for ticker AAPL|US ────────────────────────────────────
-#> ! Quota status: 41417|10000000, refreshing in 11.4 hours
+#> ! Quota status: 42675|10000000, refreshing in 11.1 hours
 #> ✔    querying API
 #> ✔    got 13 elements in raw list
 ```
@@ -116,7 +196,7 @@ names(l_fun)
 #> [13] "Financials"
 ```
 
-## Parsing financials
+## Parsing financials (wide table)
 
 ``` r
 wide_financials <- eodhd2::parse_financials(l_fun, "wide")
@@ -156,10 +236,27 @@ head(wide_financials)
 #> #   currentDeferredRevenue <dbl>, netDebt <dbl>, shortTermDebt <dbl>, …
 ```
 
-### A nice table
+## Parsing financials (long table)
 
 ``` r
 long_financials <- eodhd2::parse_financials(l_fun, "long")
+#> 
+#> ── Parsing financial data for Apple Inc | AAPL ──
+#> 
+#> ℹ parsing Balance_Sheet  data
+#> ℹ    quarterly
+#> ℹ    yearly
+#> ℹ parsing Cash_Flow  data
+#> ℹ    quarterly
+#> ℹ    yearly
+#> ℹ parsing Income_Statement  data
+#> ℹ    quarterly
+#> ℹ    yearly
+#> ✔ got 67320 rows of financial data (long format)
+```
+
+``` r
+
 head(long_financials)
 #> # A tibble: 6 × 9
 #>   date       filing_date ticker company_name frequency type_financial
@@ -171,690 +268,4 @@ head(long_financials)
 #> 5 2024-03-31 2024-05-03  AAPL   Apple Inc    quarterly Balance_Sheet 
 #> 6 2024-03-31 2024-05-03  AAPL   Apple Inc    quarterly Balance_Sheet 
 #> # ℹ 3 more variables: currency_symbol <chr>, name <chr>, value <dbl>
-```
-
-``` r
-
-my_date <- as.Date("2023-09-30")
-selected_acc <- c("date", "company_name", "frequency", "type_financial", "totalAssets", "cashAndEquivalents", "totalLiab", "totalStockholderEquity",
-                  "totalRevenue", "ebitda", "grossProfit", "netIncome")
-
-tb_fin <- long_financials |>
-  dplyr::filter(
-    name %in% selected_acc,
-    date == my_date,
-    frequency == "yearly") |>
-  dplyr::group_by(type_financial) |>
-  gt::gt() |>
-  gt::tab_header("Financial Statements of AAPL",
-                 "Data for {my_date}") |>
-  gt::fmt_currency(value)
-
-print(tb_fin)
-#> <div id="yxkqwdpxbf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-#>   <style>#yxkqwdpxbf table {
-#>   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-#>   -webkit-font-smoothing: antialiased;
-#>   -moz-osx-font-smoothing: grayscale;
-#> }
-#> 
-#> #yxkqwdpxbf thead, #yxkqwdpxbf tbody, #yxkqwdpxbf tfoot, #yxkqwdpxbf tr, #yxkqwdpxbf td, #yxkqwdpxbf th {
-#>   border-style: none;
-#> }
-#> 
-#> #yxkqwdpxbf p {
-#>   margin: 0;
-#>   padding: 0;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_table {
-#>   display: table;
-#>   border-collapse: collapse;
-#>   line-height: normal;
-#>   margin-left: auto;
-#>   margin-right: auto;
-#>   color: #333333;
-#>   font-size: 16px;
-#>   font-weight: normal;
-#>   font-style: normal;
-#>   background-color: #FFFFFF;
-#>   width: auto;
-#>   border-top-style: solid;
-#>   border-top-width: 2px;
-#>   border-top-color: #A8A8A8;
-#>   border-right-style: none;
-#>   border-right-width: 2px;
-#>   border-right-color: #D3D3D3;
-#>   border-bottom-style: solid;
-#>   border-bottom-width: 2px;
-#>   border-bottom-color: #A8A8A8;
-#>   border-left-style: none;
-#>   border-left-width: 2px;
-#>   border-left-color: #D3D3D3;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_caption {
-#>   padding-top: 4px;
-#>   padding-bottom: 4px;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_title {
-#>   color: #333333;
-#>   font-size: 125%;
-#>   font-weight: initial;
-#>   padding-top: 4px;
-#>   padding-bottom: 4px;
-#>   padding-left: 5px;
-#>   padding-right: 5px;
-#>   border-bottom-color: #FFFFFF;
-#>   border-bottom-width: 0;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_subtitle {
-#>   color: #333333;
-#>   font-size: 85%;
-#>   font-weight: initial;
-#>   padding-top: 3px;
-#>   padding-bottom: 5px;
-#>   padding-left: 5px;
-#>   padding-right: 5px;
-#>   border-top-color: #FFFFFF;
-#>   border-top-width: 0;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_heading {
-#>   background-color: #FFFFFF;
-#>   text-align: center;
-#>   border-bottom-color: #FFFFFF;
-#>   border-left-style: none;
-#>   border-left-width: 1px;
-#>   border-left-color: #D3D3D3;
-#>   border-right-style: none;
-#>   border-right-width: 1px;
-#>   border-right-color: #D3D3D3;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_bottom_border {
-#>   border-bottom-style: solid;
-#>   border-bottom-width: 2px;
-#>   border-bottom-color: #D3D3D3;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_col_headings {
-#>   border-top-style: solid;
-#>   border-top-width: 2px;
-#>   border-top-color: #D3D3D3;
-#>   border-bottom-style: solid;
-#>   border-bottom-width: 2px;
-#>   border-bottom-color: #D3D3D3;
-#>   border-left-style: none;
-#>   border-left-width: 1px;
-#>   border-left-color: #D3D3D3;
-#>   border-right-style: none;
-#>   border-right-width: 1px;
-#>   border-right-color: #D3D3D3;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_col_heading {
-#>   color: #333333;
-#>   background-color: #FFFFFF;
-#>   font-size: 100%;
-#>   font-weight: normal;
-#>   text-transform: inherit;
-#>   border-left-style: none;
-#>   border-left-width: 1px;
-#>   border-left-color: #D3D3D3;
-#>   border-right-style: none;
-#>   border-right-width: 1px;
-#>   border-right-color: #D3D3D3;
-#>   vertical-align: bottom;
-#>   padding-top: 5px;
-#>   padding-bottom: 6px;
-#>   padding-left: 5px;
-#>   padding-right: 5px;
-#>   overflow-x: hidden;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_column_spanner_outer {
-#>   color: #333333;
-#>   background-color: #FFFFFF;
-#>   font-size: 100%;
-#>   font-weight: normal;
-#>   text-transform: inherit;
-#>   padding-top: 0;
-#>   padding-bottom: 0;
-#>   padding-left: 4px;
-#>   padding-right: 4px;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_column_spanner_outer:first-child {
-#>   padding-left: 0;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_column_spanner_outer:last-child {
-#>   padding-right: 0;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_column_spanner {
-#>   border-bottom-style: solid;
-#>   border-bottom-width: 2px;
-#>   border-bottom-color: #D3D3D3;
-#>   vertical-align: bottom;
-#>   padding-top: 5px;
-#>   padding-bottom: 5px;
-#>   overflow-x: hidden;
-#>   display: inline-block;
-#>   width: 100%;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_spanner_row {
-#>   border-bottom-style: hidden;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_group_heading {
-#>   padding-top: 8px;
-#>   padding-bottom: 8px;
-#>   padding-left: 5px;
-#>   padding-right: 5px;
-#>   color: #333333;
-#>   background-color: #FFFFFF;
-#>   font-size: 100%;
-#>   font-weight: initial;
-#>   text-transform: inherit;
-#>   border-top-style: solid;
-#>   border-top-width: 2px;
-#>   border-top-color: #D3D3D3;
-#>   border-bottom-style: solid;
-#>   border-bottom-width: 2px;
-#>   border-bottom-color: #D3D3D3;
-#>   border-left-style: none;
-#>   border-left-width: 1px;
-#>   border-left-color: #D3D3D3;
-#>   border-right-style: none;
-#>   border-right-width: 1px;
-#>   border-right-color: #D3D3D3;
-#>   vertical-align: middle;
-#>   text-align: left;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_empty_group_heading {
-#>   padding: 0.5px;
-#>   color: #333333;
-#>   background-color: #FFFFFF;
-#>   font-size: 100%;
-#>   font-weight: initial;
-#>   border-top-style: solid;
-#>   border-top-width: 2px;
-#>   border-top-color: #D3D3D3;
-#>   border-bottom-style: solid;
-#>   border-bottom-width: 2px;
-#>   border-bottom-color: #D3D3D3;
-#>   vertical-align: middle;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_from_md > :first-child {
-#>   margin-top: 0;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_from_md > :last-child {
-#>   margin-bottom: 0;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_row {
-#>   padding-top: 8px;
-#>   padding-bottom: 8px;
-#>   padding-left: 5px;
-#>   padding-right: 5px;
-#>   margin: 10px;
-#>   border-top-style: solid;
-#>   border-top-width: 1px;
-#>   border-top-color: #D3D3D3;
-#>   border-left-style: none;
-#>   border-left-width: 1px;
-#>   border-left-color: #D3D3D3;
-#>   border-right-style: none;
-#>   border-right-width: 1px;
-#>   border-right-color: #D3D3D3;
-#>   vertical-align: middle;
-#>   overflow-x: hidden;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_stub {
-#>   color: #333333;
-#>   background-color: #FFFFFF;
-#>   font-size: 100%;
-#>   font-weight: initial;
-#>   text-transform: inherit;
-#>   border-right-style: solid;
-#>   border-right-width: 2px;
-#>   border-right-color: #D3D3D3;
-#>   padding-left: 5px;
-#>   padding-right: 5px;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_stub_row_group {
-#>   color: #333333;
-#>   background-color: #FFFFFF;
-#>   font-size: 100%;
-#>   font-weight: initial;
-#>   text-transform: inherit;
-#>   border-right-style: solid;
-#>   border-right-width: 2px;
-#>   border-right-color: #D3D3D3;
-#>   padding-left: 5px;
-#>   padding-right: 5px;
-#>   vertical-align: top;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_row_group_first td {
-#>   border-top-width: 2px;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_row_group_first th {
-#>   border-top-width: 2px;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_summary_row {
-#>   color: #333333;
-#>   background-color: #FFFFFF;
-#>   text-transform: inherit;
-#>   padding-top: 8px;
-#>   padding-bottom: 8px;
-#>   padding-left: 5px;
-#>   padding-right: 5px;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_first_summary_row {
-#>   border-top-style: solid;
-#>   border-top-color: #D3D3D3;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_first_summary_row.thick {
-#>   border-top-width: 2px;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_last_summary_row {
-#>   padding-top: 8px;
-#>   padding-bottom: 8px;
-#>   padding-left: 5px;
-#>   padding-right: 5px;
-#>   border-bottom-style: solid;
-#>   border-bottom-width: 2px;
-#>   border-bottom-color: #D3D3D3;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_grand_summary_row {
-#>   color: #333333;
-#>   background-color: #FFFFFF;
-#>   text-transform: inherit;
-#>   padding-top: 8px;
-#>   padding-bottom: 8px;
-#>   padding-left: 5px;
-#>   padding-right: 5px;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_first_grand_summary_row {
-#>   padding-top: 8px;
-#>   padding-bottom: 8px;
-#>   padding-left: 5px;
-#>   padding-right: 5px;
-#>   border-top-style: double;
-#>   border-top-width: 6px;
-#>   border-top-color: #D3D3D3;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_last_grand_summary_row_top {
-#>   padding-top: 8px;
-#>   padding-bottom: 8px;
-#>   padding-left: 5px;
-#>   padding-right: 5px;
-#>   border-bottom-style: double;
-#>   border-bottom-width: 6px;
-#>   border-bottom-color: #D3D3D3;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_striped {
-#>   background-color: rgba(128, 128, 128, 0.05);
-#> }
-#> 
-#> #yxkqwdpxbf .gt_table_body {
-#>   border-top-style: solid;
-#>   border-top-width: 2px;
-#>   border-top-color: #D3D3D3;
-#>   border-bottom-style: solid;
-#>   border-bottom-width: 2px;
-#>   border-bottom-color: #D3D3D3;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_footnotes {
-#>   color: #333333;
-#>   background-color: #FFFFFF;
-#>   border-bottom-style: none;
-#>   border-bottom-width: 2px;
-#>   border-bottom-color: #D3D3D3;
-#>   border-left-style: none;
-#>   border-left-width: 2px;
-#>   border-left-color: #D3D3D3;
-#>   border-right-style: none;
-#>   border-right-width: 2px;
-#>   border-right-color: #D3D3D3;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_footnote {
-#>   margin: 0px;
-#>   font-size: 90%;
-#>   padding-top: 4px;
-#>   padding-bottom: 4px;
-#>   padding-left: 5px;
-#>   padding-right: 5px;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_sourcenotes {
-#>   color: #333333;
-#>   background-color: #FFFFFF;
-#>   border-bottom-style: none;
-#>   border-bottom-width: 2px;
-#>   border-bottom-color: #D3D3D3;
-#>   border-left-style: none;
-#>   border-left-width: 2px;
-#>   border-left-color: #D3D3D3;
-#>   border-right-style: none;
-#>   border-right-width: 2px;
-#>   border-right-color: #D3D3D3;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_sourcenote {
-#>   font-size: 90%;
-#>   padding-top: 4px;
-#>   padding-bottom: 4px;
-#>   padding-left: 5px;
-#>   padding-right: 5px;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_left {
-#>   text-align: left;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_center {
-#>   text-align: center;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_right {
-#>   text-align: right;
-#>   font-variant-numeric: tabular-nums;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_font_normal {
-#>   font-weight: normal;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_font_bold {
-#>   font-weight: bold;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_font_italic {
-#>   font-style: italic;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_super {
-#>   font-size: 65%;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_footnote_marks {
-#>   font-size: 75%;
-#>   vertical-align: 0.4em;
-#>   position: initial;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_asterisk {
-#>   font-size: 100%;
-#>   vertical-align: 0;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_indent_1 {
-#>   text-indent: 5px;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_indent_2 {
-#>   text-indent: 10px;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_indent_3 {
-#>   text-indent: 15px;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_indent_4 {
-#>   text-indent: 20px;
-#> }
-#> 
-#> #yxkqwdpxbf .gt_indent_5 {
-#>   text-indent: 25px;
-#> }
-#> </style>
-#>   <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-#>   <thead>
-#>     <tr class="gt_heading">
-#>       <td colspan="8" class="gt_heading gt_title gt_font_normal" style>Financial Statements of AAPL</td>
-#>     </tr>
-#>     <tr class="gt_heading">
-#>       <td colspan="8" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style>Data for {my_date}</td>
-#>     </tr>
-#>     <tr class="gt_col_headings">
-#>       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="date">date</th>
-#>       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="filing_date">filing_date</th>
-#>       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="ticker">ticker</th>
-#>       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="company_name">company_name</th>
-#>       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="frequency">frequency</th>
-#>       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="currency_symbol">currency_symbol</th>
-#>       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="name">name</th>
-#>       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="value">value</th>
-#>     </tr>
-#>   </thead>
-#>   <tbody class="gt_table_body">
-#>     <tr class="gt_group_heading_row">
-#>       <th colspan="8" class="gt_group_heading" scope="colgroup" id="Balance_Sheet">Balance_Sheet</th>
-#>     </tr>
-#>     <tr class="gt_row_group_first"><td headers="Balance_Sheet  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Balance_Sheet  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Balance_Sheet  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Balance_Sheet  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Balance_Sheet  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Balance_Sheet  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Balance_Sheet  name" class="gt_row gt_left">totalAssets</td>
-#> <td headers="Balance_Sheet  value" class="gt_row gt_right">$352,583,000,000.00</td></tr>
-#>     <tr><td headers="Balance_Sheet  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Balance_Sheet  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Balance_Sheet  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Balance_Sheet  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Balance_Sheet  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Balance_Sheet  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Balance_Sheet  name" class="gt_row gt_left">totalLiab</td>
-#> <td headers="Balance_Sheet  value" class="gt_row gt_right">$290,437,000,000.00</td></tr>
-#>     <tr><td headers="Balance_Sheet  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Balance_Sheet  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Balance_Sheet  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Balance_Sheet  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Balance_Sheet  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Balance_Sheet  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Balance_Sheet  name" class="gt_row gt_left">totalStockholderEquity</td>
-#> <td headers="Balance_Sheet  value" class="gt_row gt_right">$62,146,000,000.00</td></tr>
-#>     <tr><td headers="Balance_Sheet  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Balance_Sheet  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Balance_Sheet  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Balance_Sheet  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Balance_Sheet  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Balance_Sheet  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Balance_Sheet  name" class="gt_row gt_left">cashAndEquivalents</td>
-#> <td headers="Balance_Sheet  value" class="gt_row gt_right">$29,965,000,000.00</td></tr>
-#>     <tr><td headers="Balance_Sheet  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Balance_Sheet  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Balance_Sheet  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Balance_Sheet  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Balance_Sheet  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Balance_Sheet  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Balance_Sheet  name" class="gt_row gt_left">netIncome</td>
-#> <td headers="Balance_Sheet  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr><td headers="Balance_Sheet  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Balance_Sheet  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Balance_Sheet  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Balance_Sheet  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Balance_Sheet  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Balance_Sheet  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Balance_Sheet  name" class="gt_row gt_left">grossProfit</td>
-#> <td headers="Balance_Sheet  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr><td headers="Balance_Sheet  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Balance_Sheet  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Balance_Sheet  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Balance_Sheet  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Balance_Sheet  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Balance_Sheet  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Balance_Sheet  name" class="gt_row gt_left">ebitda</td>
-#> <td headers="Balance_Sheet  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr><td headers="Balance_Sheet  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Balance_Sheet  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Balance_Sheet  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Balance_Sheet  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Balance_Sheet  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Balance_Sheet  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Balance_Sheet  name" class="gt_row gt_left">totalRevenue</td>
-#> <td headers="Balance_Sheet  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr class="gt_group_heading_row">
-#>       <th colspan="8" class="gt_group_heading" scope="colgroup" id="Cash_Flow">Cash_Flow</th>
-#>     </tr>
-#>     <tr class="gt_row_group_first"><td headers="Cash_Flow  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Cash_Flow  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Cash_Flow  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Cash_Flow  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Cash_Flow  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Cash_Flow  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Cash_Flow  name" class="gt_row gt_left">totalAssets</td>
-#> <td headers="Cash_Flow  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr><td headers="Cash_Flow  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Cash_Flow  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Cash_Flow  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Cash_Flow  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Cash_Flow  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Cash_Flow  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Cash_Flow  name" class="gt_row gt_left">totalLiab</td>
-#> <td headers="Cash_Flow  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr><td headers="Cash_Flow  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Cash_Flow  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Cash_Flow  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Cash_Flow  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Cash_Flow  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Cash_Flow  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Cash_Flow  name" class="gt_row gt_left">totalStockholderEquity</td>
-#> <td headers="Cash_Flow  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr><td headers="Cash_Flow  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Cash_Flow  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Cash_Flow  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Cash_Flow  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Cash_Flow  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Cash_Flow  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Cash_Flow  name" class="gt_row gt_left">cashAndEquivalents</td>
-#> <td headers="Cash_Flow  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr><td headers="Cash_Flow  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Cash_Flow  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Cash_Flow  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Cash_Flow  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Cash_Flow  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Cash_Flow  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Cash_Flow  name" class="gt_row gt_left">netIncome</td>
-#> <td headers="Cash_Flow  value" class="gt_row gt_right">$96,995,000,000.00</td></tr>
-#>     <tr><td headers="Cash_Flow  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Cash_Flow  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Cash_Flow  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Cash_Flow  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Cash_Flow  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Cash_Flow  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Cash_Flow  name" class="gt_row gt_left">grossProfit</td>
-#> <td headers="Cash_Flow  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr><td headers="Cash_Flow  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Cash_Flow  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Cash_Flow  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Cash_Flow  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Cash_Flow  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Cash_Flow  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Cash_Flow  name" class="gt_row gt_left">ebitda</td>
-#> <td headers="Cash_Flow  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr><td headers="Cash_Flow  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Cash_Flow  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Cash_Flow  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Cash_Flow  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Cash_Flow  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Cash_Flow  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Cash_Flow  name" class="gt_row gt_left">totalRevenue</td>
-#> <td headers="Cash_Flow  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr class="gt_group_heading_row">
-#>       <th colspan="8" class="gt_group_heading" scope="colgroup" id="Income_Statement">Income_Statement</th>
-#>     </tr>
-#>     <tr class="gt_row_group_first"><td headers="Income_Statement  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Income_Statement  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Income_Statement  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Income_Statement  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Income_Statement  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Income_Statement  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Income_Statement  name" class="gt_row gt_left">totalAssets</td>
-#> <td headers="Income_Statement  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr><td headers="Income_Statement  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Income_Statement  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Income_Statement  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Income_Statement  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Income_Statement  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Income_Statement  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Income_Statement  name" class="gt_row gt_left">totalLiab</td>
-#> <td headers="Income_Statement  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr><td headers="Income_Statement  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Income_Statement  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Income_Statement  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Income_Statement  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Income_Statement  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Income_Statement  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Income_Statement  name" class="gt_row gt_left">totalStockholderEquity</td>
-#> <td headers="Income_Statement  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr><td headers="Income_Statement  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Income_Statement  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Income_Statement  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Income_Statement  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Income_Statement  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Income_Statement  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Income_Statement  name" class="gt_row gt_left">cashAndEquivalents</td>
-#> <td headers="Income_Statement  value" class="gt_row gt_right">NA</td></tr>
-#>     <tr><td headers="Income_Statement  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Income_Statement  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Income_Statement  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Income_Statement  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Income_Statement  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Income_Statement  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Income_Statement  name" class="gt_row gt_left">netIncome</td>
-#> <td headers="Income_Statement  value" class="gt_row gt_right">$96,995,000,000.00</td></tr>
-#>     <tr><td headers="Income_Statement  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Income_Statement  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Income_Statement  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Income_Statement  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Income_Statement  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Income_Statement  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Income_Statement  name" class="gt_row gt_left">grossProfit</td>
-#> <td headers="Income_Statement  value" class="gt_row gt_right">$169,148,000,000.00</td></tr>
-#>     <tr><td headers="Income_Statement  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Income_Statement  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Income_Statement  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Income_Statement  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Income_Statement  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Income_Statement  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Income_Statement  name" class="gt_row gt_left">ebitda</td>
-#> <td headers="Income_Statement  value" class="gt_row gt_right">$125,820,000,000.00</td></tr>
-#>     <tr><td headers="Income_Statement  date" class="gt_row gt_right">2023-09-30</td>
-#> <td headers="Income_Statement  filing_date" class="gt_row gt_right">2023-11-03</td>
-#> <td headers="Income_Statement  ticker" class="gt_row gt_left">AAPL</td>
-#> <td headers="Income_Statement  company_name" class="gt_row gt_left">Apple Inc</td>
-#> <td headers="Income_Statement  frequency" class="gt_row gt_left">yearly</td>
-#> <td headers="Income_Statement  currency_symbol" class="gt_row gt_left">USD</td>
-#> <td headers="Income_Statement  name" class="gt_row gt_left">totalRevenue</td>
-#> <td headers="Income_Statement  value" class="gt_row gt_right">$383,285,000,000.00</td></tr>
-#>   </tbody>
-#>   
-#>   
-#> </table>
-#> </div>
 ```

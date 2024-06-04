@@ -21,15 +21,23 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/msperlin/eodhd2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/msperlin/eodhd2/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-[EODHD](https://eodhd.com/) is a private company that offers access to a set of comprehensive and high quality repositories of  financial data for over 70+ exchanges accross the world. 
+[eodhd](https://eodhd.com/) is a private company that offers access to a set of comprehensive and high quality financial data for over 70+ exchanges across the world. This includes:
+
+* Adjusted and unadjusted prices of financial contracts (equity, funds, ETF, cryptocurrencies, ..)
+* Financial information of companies (Balance Sheet, Income/Cashflow statement)
+* Valuation indicators
+* And [more](https://eodhd.com/)..
+
+Package eodhd2 is an R port of the API, allowing fast and intelligent access to the most endpoints. 
 
 # Features
 
-- cache
-- quota management
+- Caching system that saves queries to local files, saving network bandwidth and api calls
+- Quota management, informing the user of how much quota was used and how much to refresh the daily quota
+- Function for aggregating and organizing financial information into a single dataframe
 
 
-## Installation
+# Installation
 
 ```{r, eval=FALSE}
 # not yet in CRAN
@@ -39,16 +47,30 @@ knitr::opts_chunk$set(
 devtools::install_github("msperlin/eodhd2")
 ```
 
+# Usage
 
 ## Authentication
 
-```{r}
-eodhd2::set_token()
+After registering at the [website](https://eodhd.com/) and choosing a subscription, all users will authenticate an R session using a token from the website:
+
+![](inst/extdata/figs/token.png)
+
+The authentication is managed with function `set_token()`:
+
+```{r, eval=FALSE}
+eodhd2::set_token("YOUR_TOKEN")
 ```
 
-## Usage
+Alternatively, you can use the "demo" token for demonstration.
 
-## Fetching Financial Prices
+```{r, eval=TRUE}
+token <- eodhd2::get_demo_token()
+eodhd2::set_token(token)
+```
+
+# Examples
+
+## Retrieving Financial Prices
 
 ```{r}
 ticker <- "AAPL"
@@ -72,7 +94,32 @@ p <- ggplot(df_prices, aes(y = adjusted_close, x = date)) +
 
 p
 ```
-## Fetching Fundamentals
+
+## Retrieving Dividends
+
+```{r}
+ticker <- "AAPL"
+exchange <- "US"
+
+df_div <- eodhd2::get_dividends(ticker, exchange)
+
+head(df_div)
+```
+
+```{r}
+library(ggplot2)
+
+p <- ggplot(df_div, aes(y = value, x = date)) + 
+  geom_line() + 
+  theme_light() + 
+  labs(title = "Adjusted Dividends of AAPL",
+       x = "Data",
+       y = "Adjusted Dividends")
+
+p
+```
+
+## Retrieving Fundamentals
 
 ```{r}
 ticker <- "AAPL"
@@ -83,7 +130,7 @@ l_fun <- eodhd2::get_fundamentals(ticker, exchange)
 names(l_fun)
 ```
 
-## Parsing financials
+## Parsing financials (wide table)
 
 ```{r}
 wide_financials <- eodhd2::parse_financials(l_fun, "wide")
@@ -91,28 +138,10 @@ wide_financials <- eodhd2::parse_financials(l_fun, "wide")
 head(wide_financials)
 ```
 
+## Parsing financials (long table)
 
-### A nice table
-
-```{r, message=FALSE}
+```{r}
 long_financials <- eodhd2::parse_financials(l_fun, "long")
+
 head(long_financials)
-
-my_date <- as.Date("2023-09-30")
-selected_acc <- c("date", "company_name", "frequency", "type_financial", "totalAssets", "cashAndEquivalents", "totalLiab", "totalStockholderEquity",
-                  "totalRevenue", "ebitda", "grossProfit", "netIncome")
-
-tb_fin <- long_financials |>
-  dplyr::filter(
-    name %in% selected_acc,
-    date == my_date,
-    frequency == "yearly") |>
-  dplyr::group_by(type_financial) |>
-  gt::gt() |>
-  gt::tab_header("Financial Statements of AAPL",
-                 "Data for {my_date}") |>
-  gt::fmt_currency(value)
-
-print(tb_fin)
 ```
-
