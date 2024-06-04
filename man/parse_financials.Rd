@@ -4,18 +4,23 @@
 \alias{parse_financials}
 \title{Parses financial data from the API}
 \usage{
-parse_financials(l_out, type_table = "wide")
+parse_financials(l_out, type_table = "long")
 }
 \arguments{
-\item{l_out}{List from get_fundamental()}
+\item{l_out}{A list with raw data (output from \code{\link[=get_fundamentals]{get_fundamentals()}})}
 
-\item{type_table}{Type of table in output ("wide" or "long"). A wide table is a typical Excel column-oriented table where each columns is a data/year.
-A long type of table row-oriented, where each each point of new information is a row of the table.}
+\item{type_table}{Format of table in output ("wide" or "long"). A "wide" table is a typical Excel column-oriented table where each columns is a data/year.
+A long type of table row-oriented, where each each point of new information is a row of the table. The data is the same, it just changes the orientation of rows/columns.
+The default value is a "long" table.}
 }
 \description{
-Parses financial data from the API
+This function will organize the raw financial data from \code{\link[=get_fundamentals]{get_fundamentals()}}, aggregating all information into a single dataframe,
+including quarterly and yearly data from the Balance_sheet, Cashflow statement and Income statement.
 }
 \examples{
-# no example
+set_token(get_demo_token())
+l_out <- get_fundamentals(ticker = "AAPL", exchange = "US")
 
+df_fin <- parse_financials(l_out, "long")
+df_fin
 }

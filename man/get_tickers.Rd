@@ -7,7 +7,7 @@
 get_tickers(exchange = "US")
 }
 \arguments{
-\item{exchange}{a exchange (e.g. US). You can find all tickers and exchanges from get_info()}
+\item{exchange}{A exchange symbol (e.g. US). You can find all tickers for a particular exchange with \code{\link[=get_tickers]{get_tickers()}}.}
 }
 \value{
 A dataframe with a list of tickers
@@ -16,7 +16,7 @@ A dataframe with a list of tickers
 Retrieves a list of tickers for a particular exchange
 }
 \examples{
-\dontrun{
+\dontrun{ # requires a subscription (paid) token
 df_tickers <- get_tickers("US")
 }
 }

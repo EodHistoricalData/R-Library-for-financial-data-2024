@@ -1,4 +1,4 @@
-#' Fetches splits data from eodhd
+#' Retrieves splits data from eodhd
 #'
 #' @inheritParams get_fundamentals
 #'
@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \dontrun{# requires a subscription (paid) token
 #'  df_split <- get_splits(ticker = "AAPL", exchange = "US")
 #' }
 get_splits <- function(ticker = "AAPL", exchange = "US",

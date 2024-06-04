@@ -2,7 +2,7 @@
 % Please edit documentation in R/prices.R
 \name{get_prices}
 \alias{get_prices}
-\title{Fetches adjusted and unadjusted stock prices prices}
+\title{Retrieves adjusted and unadjusted stock prices}
 \usage{
 get_prices(
   ticker = "AAPL",
@@ -12,21 +12,22 @@ get_prices(
 )
 }
 \arguments{
-\item{ticker}{a company ticker (identificer) (e.g. AAPL)}
+\item{ticker}{A company ticker (e.g. AAPL). You can find all tickers for a particular exchange with \code{\link[=get_tickers]{get_tickers()}}.}
 
-\item{exchange}{a exchange (e.g. US). You can find all tickers and exchanges from get_info()}
+\item{exchange}{A exchange symbol (e.g. US). You can find all tickers for a particular exchange with \code{\link[=get_tickers]{get_tickers()}}.}
 
-\item{cache_folder}{A local directory to store cache files. By default, it uses a temporary path, meaning that the cache system
-is session persistent (it will remove all files when you exit your R session). If you want a persistent caching system, simply
-point to a local directory in your file system.}
+\item{cache_folder}{A local directory to store cache files. By default, all functions use a temporary path, meaning that the caching system
+is session persistent (it will remove all files when you exit your R session). If you want a persistent caching system, simply point argument
+cache_folder to a local directory in your filesystem. Be aware, however, that a persistent cache will not refresh your data for new api queries.}
 
-\item{check_quota}{A flag (TRUE/FALSE) for wheter to check the quote from api or not (a small trade of execution time)}
+\item{check_quota}{A flag (TRUE/FALSE) for whether to check the current quota status from the api. This option has a small cost of execution
+time. If you need speed, just set it to FALSE.}
 }
 \value{
 A dataframe with prices
 }
 \description{
-Fetches adjusted and unadjusted stock prices prices
+This function will return daily stock price from a set of ticker and exchange.
 }
 \examples{
 set_token("demo")

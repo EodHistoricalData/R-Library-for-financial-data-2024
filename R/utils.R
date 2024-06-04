@@ -1,5 +1,7 @@
 #' Parse api status code
 #'
+#' See <https://developer.mozilla.org/en-US/docs/Web/HTTP/Status> for details
+#'
 #' @param status_code returned status code
 #'
 #' @noRd
@@ -10,22 +12,10 @@
 #'
 parse_status_code <- function(status_code) {
 
-  if (status_code == 200) {
+  l_out <- httr::http_status(status_code)
 
-    # this is ok
-
-  } else  if (status_code == 400) {
-
-    cli::cli_abort("got a 400 (missing parameter) return code from API (check inputs?)")
-
-  } else if (status_code == 403) {
-
-    cli::cli_abort("got a 403 (forbidden) return code from API (check your token & subscription?)")
-
-  } else {
-
-    cli::cli_abort("error on server side.. ")
-
+  if (l_out$category != "Success") {
+    cli::cli_abort("{l_out$message}")
   }
 
   return(invisible(TRUE))

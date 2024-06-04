@@ -1,7 +1,15 @@
+#' Returns default cache folder
+#'
+#' @noRd
 get_default_cache <- function() {
+
   return(fs::path_temp("eodhd2-cache"))
+
 }
 
+#' Creates path of cache file
+#'
+#' @noRd
 get_cache_file <- function(ticker, exchange, cache_folder, type_data) {
 
   f_out <- fs::path(
@@ -14,14 +22,21 @@ get_cache_file <- function(ticker, exchange, cache_folder, type_data) {
   return(f_out)
 }
 
+#' Writes file to cache
+#'
+#' @noRd
 write_cache <- function(x, f_out) {
 
   readr::write_rds(x, f_out)
 
+  cli::cli_alert_info("cache file {f_out} saved")
   return(invisible(TRUE))
 
 }
 
+#' Reads file to cache
+#'
+#' @noRd
 read_cache <- function(f_cache) {
 
   x <- readr::read_rds(f_cache)

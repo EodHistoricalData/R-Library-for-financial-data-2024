@@ -1,29 +1,36 @@
-#' Fetches fundamental data from eodhd api
+#' Retrieves and parses fundamental and financial data from eodhd api
 #'
-#' @param ticker a company ticker (identificer) (e.g. AAPL)
-#' @param exchange a exchange (e.g. US). You can find all tickers and exchanges from get_info()
-#' @param cache_folder A local directory to store cache files. By default, it uses a temporary path, meaning that the cache system
-#' is session persistent (it will remove all files when you exit your R session). If you want a persistent caching system, simply
-#' point to a local directory in your file system.
-#' @param check_quota A flag (TRUE/FALSE) for wheter to check the quote from api or not (a small trade of execution time)
+#' This function will download raw data from the fundamental end point of eodhd <https://eodhd.com/financial-apis/stock-etfs-fundamental-data-feeds> and
+#' return a list. The raw data includes:
+#' * General information for the company (code, ISIN, currency, ..)
+#' * Financial highlights
+#' * Valuation
+#' * Raw financial data (see [eodhd2::parse_financials()] for parsing this data)
+#' * and many more (see example for more details)
 #'
-#' @return  a list with several information
+#' @param ticker A company ticker (e.g. AAPL). You can find all tickers for a particular exchange with [eodhd2::get_tickers()].
+#' @param exchange A exchange symbol (e.g. US). You can find all tickers for a particular exchange with [eodhd2::get_tickers()].
+#' @param cache_folder A local directory to store cache files. By default, all functions use a temporary path, meaning that the caching system
+#' is session persistent (it will remove all files when you exit your R session). If you want a persistent caching system, simply point argument
+#' cache_folder to a local directory in your filesystem. Be aware, however, that a persistent cache will not refresh your data for new api queries.
+#' @param check_quota A flag (TRUE/FALSE) for whether to check the current quota status from the api. This option has a small cost of execution
+#' time. If you need speed, just set it to FALSE.
+#'
+#' @return  a list with several fundamental information
 #' @export
 #'
 #' @examples
-#' set_token("demo")
+#' set_token(get_demo_token())
 #' l_out <- get_fundamentals(ticker = "AAPL", exchange = "US")
 #' names(l_out)
 get_fundamentals <- function(ticker = "AAPL",
                              exchange = "US",
                              cache_folder = get_default_cache(),
-                             check_quota = TRUE
-) {
+                             check_quota = TRUE) {
 
   cli::cli_h1("fetching fundamentals for ticker {ticker}|{exchange}")
 
   token <- get_token()
-  set_token(token)
 
   if (check_quota) {
     get_quota_status()
@@ -59,7 +66,7 @@ get_fundamentals <- function(ticker = "AAPL",
     readr::write_rds(l_out, f_out)
   }
 
-  cli::cli_alert_success("\tgot {length(l_out)} elements in list")
+  cli::cli_alert_success("\tgot {length(l_out)} elements in raw list")
 
   return(l_out)
 

@@ -1,4 +1,8 @@
-
+#' Returns quota from eodhd
+#'
+#' @param token token from website
+#'
+#' @noRd
 get_quota <- function(token = get_demo_token()) {
 
   url <- glue::glue('{get_base_url()}/user?api_token={token}')
@@ -11,6 +15,9 @@ get_quota <- function(token = get_demo_token()) {
 
 }
 
+#' Returns a message for quota status
+#'
+#' @noRd
 get_quota_status <- function() {
 
   token <- get_token()

@@ -2,7 +2,7 @@
 % Please edit documentation in R/fundamentals.R
 \name{get_fundamentals}
 \alias{get_fundamentals}
-\title{Fetches fundamental data from eodhd api}
+\title{Retrieves and parses fundamental and financial data from eodhd api}
 \usage{
 get_fundamentals(
   ticker = "AAPL",
@@ -12,24 +12,33 @@ get_fundamentals(
 )
 }
 \arguments{
-\item{ticker}{a company ticker (identificer) (e.g. AAPL)}
+\item{ticker}{A company ticker (e.g. AAPL). You can find all tickers for a particular exchange with \code{\link[=get_tickers]{get_tickers()}}.}
 
-\item{exchange}{a exchange (e.g. US). You can find all tickers and exchanges from get_info()}
+\item{exchange}{A exchange symbol (e.g. US). You can find all tickers for a particular exchange with \code{\link[=get_tickers]{get_tickers()}}.}
 
-\item{cache_folder}{A local directory to store cache files. By default, it uses a temporary path, meaning that the cache system
-is session persistent (it will remove all files when you exit your R session). If you want a persistent caching system, simply
-point to a local directory in your file system.}
+\item{cache_folder}{A local directory to store cache files. By default, all functions use a temporary path, meaning that the caching system
+is session persistent (it will remove all files when you exit your R session). If you want a persistent caching system, simply point argument
+cache_folder to a local directory in your filesystem. Be aware, however, that a persistent cache will not refresh your data for new api queries.}
 
-\item{check_quota}{A flag (TRUE/FALSE) for wheter to check the quote from api or not (a small trade of execution time)}
+\item{check_quota}{A flag (TRUE/FALSE) for whether to check the current quota status from the api. This option has a small cost of execution
+time. If you need speed, just set it to FALSE.}
 }
 \value{
-a list with several information
+a list with several fundamental information
 }
 \description{
-Fetches fundamental data from eodhd api
+This function will download raw data from the fundamental end point of eodhd \url{https://eodhd.com/financial-apis/stock-etfs-fundamental-data-feeds} and
+return a list. The raw data includes:
+\itemize{
+\item General information for the company (code, ISIN, currency, ..)
+\item Financial highlights
+\item Valuation
+\item Raw financial data (see \code{\link[=parse_financials]{parse_financials()}} for parsing this data)
+\item and many more (see example for more details)
+}
 }
 \examples{
-set_token("demo")
+set_token(get_demo_token())
 l_out <- get_fundamentals(ticker = "AAPL", exchange = "US")
 names(l_out)
 }

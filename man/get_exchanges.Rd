@@ -2,7 +2,7 @@
 % Please edit documentation in R/exchanges.R
 \name{get_exchanges}
 \alias{get_exchanges}
-\title{Fetches exchange list from api}
+\title{Retriees the list of exchanges available}
 \usage{
 get_exchanges()
 }
@@ -10,14 +10,14 @@ get_exchanges()
 a dataframe with information about available exchanges
 }
 \description{
-Fetches exchange list from api
+Retriees the list of exchanges available
 }
 \examples{
 
 # you need a valid token (not test) for this to work
 \dontrun{
+set_token(YOUR_VALID_TOKEN)
 df_exc <- get_exchanges()
 }
-
 
 }

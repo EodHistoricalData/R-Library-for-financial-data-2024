@@ -6,7 +6,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \dontrun{ # requires a subscription (paid) token
 #' df_tickers <- get_tickers("US")
 #' }
 get_tickers <- function(exchange = "US") {

@@ -1,4 +1,6 @@
-#' Fetches adjusted and unadjusted stock prices prices
+#' Retrieves adjusted and unadjusted stock prices
+#'
+#' This function will return daily stock price from a set of ticker and exchange.
 #'
 #' @inheritParams get_fundamentals
 #'
@@ -13,7 +15,9 @@ get_prices <- function(ticker = "AAPL",
                        cache_folder = get_default_cache(),
                        check_quota = TRUE) {
 
-  if (check_quota) {
+  cli::cli_h1("fetching price data for ticker {ticker}|{exchange}")
+
+    if (check_quota) {
     get_quota_status()
   }
 

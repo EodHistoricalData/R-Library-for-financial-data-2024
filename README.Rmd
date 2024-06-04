@@ -13,7 +13,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-# About eodhd
+# About eodhd2
+
+![](inst/extdata/figs/website-eodhd.png)
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/msperlin/eodhd2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/msperlin/eodhd2/actions/workflows/R-CMD-check.yaml)

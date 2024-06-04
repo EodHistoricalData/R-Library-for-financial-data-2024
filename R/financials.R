@@ -1,15 +1,22 @@
 #' Parses financial data from the API
 #'
-#' @param l_out List from get_fundamental()
-#' @param type_table Type of table in output ("wide" or "long"). A wide table is a typical Excel column-oriented table where each columns is a data/year.
-#' A long type of table row-oriented, where each each point of new information is a row of the table.
+#' This function will organize the raw financial data from [eodhd2::get_fundamentals()], aggregating all information into a single dataframe,
+#' including quarterly and yearly data from the Balance_sheet, Cashflow statement and Income statement.
+#'
+#' @param l_out A list with raw data (output from [eodhd2::get_fundamentals()])
+#' @param type_table Format of table in output ("wide" or "long"). A "wide" table is a typical Excel column-oriented table where each columns is a data/year.
+#' A long type of table row-oriented, where each each point of new information is a row of the table. The data is the same, it just changes the orientation of rows/columns.
+#' The default value is a "long" table.
 #'
 #' @export
 #'
 #' @examples
-#' # no example
+#' set_token(get_demo_token())
+#' l_out <- get_fundamentals(ticker = "AAPL", exchange = "US")
 #'
-parse_financials <- function(l_out, type_table = "wide") {
+#' df_fin <- parse_financials(l_out, "long")
+#' df_fin
+parse_financials <- function(l_out, type_table = "long") {
 
   possible_values <- c("long", "wide")
   if (!type_table %in% possible_values) {

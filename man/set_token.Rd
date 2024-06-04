@@ -14,7 +14,7 @@ Nothing
 }
 \description{
 Uses the token from \url{https://eodhd.com/cp/dashboard} to authenticate your R session. You can find your own eodhd token from the website.
-Althernatively, a demo token is also available for testing purposes.
+Alternatively, a demo token is also available for testing purposes, with a limited supply of data.
 }
 \examples{
 set_token()

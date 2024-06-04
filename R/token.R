@@ -1,7 +1,7 @@
 #' Sets up authentication for eodhd
 #'
 #' Uses the token from <https://eodhd.com/cp/dashboard> to authenticate your R session. You can find your own eodhd token from the website.
-#' Althernatively, a demo token is also available for testing purposes.
+#' Alternatively, a demo token is also available for testing purposes, with a limited supply of data.
 #'
 #' @param token the token from eodhd. The default value is a demo token "demo", which allows for partial access to the data
 #'
@@ -41,6 +41,13 @@ set_token <- function(token = get_demo_token()) {
 
 }
 
+#' Returns token for demonstration
+#'
+#' @return A string with token
+#' @export
+#'
+#' @examples
+#' get_demo_token()
 get_demo_token <- function() {
   token = "demo"
   return(token)
@@ -48,6 +55,10 @@ get_demo_token <- function() {
 
 get_token <- function() {
   token <- Sys.getenv("eodhd-token")
+
+  if (token == "") {
+    cli::cli_abort("Cant find token. Set your token with function eodhd2::set_token()")
+  }
 
   return(token)
 
