@@ -15,7 +15,8 @@ The default value is a "long" table.}
 }
 \description{
 This function will organize the raw financial data from \code{\link[=get_fundamentals]{get_fundamentals()}}, aggregating all information into a single dataframe,
-including quarterly and yearly data from the Balance_sheet, Cashflow statement and Income statement.
+including quarterly and yearly data from the Balance_sheet, Cashflow statement and Income statement. Whenever no financial data is found in
+l_out, the function returns an empty dataframe.
 }
 \examples{
 set_token(get_demo_token())

@@ -1,7 +1,8 @@
 #' Parses financial data from the API
 #'
 #' This function will organize the raw financial data from [eodhd2::get_fundamentals()], aggregating all information into a single dataframe,
-#' including quarterly and yearly data from the Balance_sheet, Cashflow statement and Income statement.
+#' including quarterly and yearly data from the Balance_sheet, Cashflow statement and Income statement. Whenever no financial data is found in
+#' l_out, the function returns an empty dataframe.
 #'
 #' @param l_out A list with raw data (output from [eodhd2::get_fundamentals()])
 #' @param type_table Format of table in output ("wide" or "long"). A "wide" table is a typical Excel column-oriented table where each columns is a data/year.
@@ -29,6 +30,8 @@ parse_financials <- function(l_out, type_table = "long") {
 
   cli::cli_h2("Parsing financial data for {this_name} | {ticker}")
 
+  # check if financial data exists
+
   Financials <- l_out$Financials
   names_fin <- names(Financials)
 
@@ -45,6 +48,11 @@ parse_financials <- function(l_out, type_table = "long") {
     for (i_freq in names_freq) {
       cli::cli_alert_info("\t{i_freq}")
 
+      if (length(this_fin[[i_freq]]) == 0) {
+        cli::cli_warn("found 0 elements for {i_fin}-{i_freq}")
+        next()
+      }
+
       df_this <- purrr::map_df(this_fin[[i_freq]], parse_single_financial) |>
         dplyr::mutate(ticker = ticker,
                       company_name = this_name,
@@ -59,6 +67,13 @@ parse_financials <- function(l_out, type_table = "long") {
     }
 
 
+  }
+
+
+  # exit if no data is found
+  if (nrow(df_financials) == 0){
+    cli::cli_warn("cant find any financial data.. returning empty dataframe ")
+    return(dplyr::tibble())
   }
 
   if (type_table == "long") {
