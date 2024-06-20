@@ -69,7 +69,6 @@ parse_financials <- function(l_out, type_table = "long") {
 
   }
 
-
   # exit if no data is found
   if (nrow(df_financials) == 0){
     cli::cli_warn("cant find any financial data.. returning empty dataframe ")

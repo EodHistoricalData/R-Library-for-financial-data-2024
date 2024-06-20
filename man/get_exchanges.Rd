@@ -2,21 +2,26 @@
 % Please edit documentation in R/exchanges.R
 \name{get_exchanges}
 \alias{get_exchanges}
-\title{Retriees the list of exchanges available}
+\title{Retrieves the list of available exchanges}
 \usage{
-get_exchanges()
+get_exchanges(cache_folder = get_default_cache())
+}
+\arguments{
+\item{cache_folder}{A local directory to store cache files. By default, all functions use a temporary path, meaning that the caching system
+is session persistent (it will remove all files when you exit your R session). If you want a persistent caching system, simply point argument
+cache_folder to a local directory in your filesystem. Be aware, however, that a persistent cache will not refresh your data for new api queries.}
 }
 \value{
 a dataframe with information about available exchanges
 }
 \description{
-Retriees the list of exchanges available
+Retrieves the list of available exchanges
 }
 \examples{
 
 # you need a valid token (not test) for this to work
 \dontrun{
-set_token(YOUR_VALID_TOKEN)
+set_token("YOUR_VALID_TOKEN")
 df_exc <- get_exchanges()
 }
 

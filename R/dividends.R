@@ -39,7 +39,7 @@ get_dividends <- function(ticker = "AAPL", exchange = "US",
     content <- query_api(url)
 
     if (content == "[]") {
-      cli::cli_alert_danger("\tcant find dividend data for {ticker}|{exchange}")
+      cli::cli_alert_danger("cant find dividend data for {ticker}|{exchange}")
 
       df_div <- dplyr::tibble()
 
@@ -56,7 +56,7 @@ get_dividends <- function(ticker = "AAPL", exchange = "US",
     write_cache(df_div, f_out)
   }
 
-  cli::cli_alert_success("\tgot {nrow(df_div)} rows of dividend data")
+  cli::cli_alert_success("got {nrow(df_div)} rows of dividend data")
 
   return(df_div)
 

@@ -4,10 +4,14 @@
 \alias{get_tickers}
 \title{Retrieves a list of tickers for a particular exchange}
 \usage{
-get_tickers(exchange = "US")
+get_tickers(exchange = "US", cache_folder = get_default_cache())
 }
 \arguments{
-\item{exchange}{A exchange symbol (e.g. US). You can find all tickers for a particular exchange with \code{\link[=get_tickers]{get_tickers()}}.}
+\item{exchange}{A exchange symbol (e.g. US). You can find all tickers for a particular exchange with \code{\link[=get_tickers]{get_tickers()}}. Be aware that, for US companies, the exchange symbols is simply "US"}
+
+\item{cache_folder}{A local directory to store cache files. By default, all functions use a temporary path, meaning that the caching system
+is session persistent (it will remove all files when you exit your R session). If you want a persistent caching system, simply point argument
+cache_folder to a local directory in your filesystem. Be aware, however, that a persistent cache will not refresh your data for new api queries.}
 }
 \value{
 A dataframe with a list of tickers

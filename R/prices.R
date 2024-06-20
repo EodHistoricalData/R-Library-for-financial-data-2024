@@ -1,6 +1,7 @@
 #' Retrieves adjusted and unadjusted stock prices
 #'
-#' This function will return daily stock price from a set of ticker and exchange.
+#' This function will query the price end point of eodhd and return daily stock price from a set of ticker and exchange.
+#' It also includes the daily stock return (percentage variation).
 #'
 #' @inheritParams get_fundamentals
 #'
@@ -17,7 +18,7 @@ get_prices <- function(ticker = "AAPL",
 
   cli::cli_h1("retrieving price data for ticker {ticker}|{exchange}")
 
-    if (check_quota) {
+  if (check_quota) {
     get_quota_status()
   }
 
@@ -26,7 +27,6 @@ get_prices <- function(ticker = "AAPL",
   f_out <-get_cache_file(ticker, exchange, cache_folder, "prices")
 
   if (fs::file_exists(f_out)) {
-    cli::cli_alert_success("\treading cache file {f_out}")
 
     df_out <- read_cache(f_out)
 
@@ -47,8 +47,8 @@ get_prices <- function(ticker = "AAPL",
 
   write_cache(df_prices, f_out)
 
-  cli::cli_alert_success("\tgot {nrow(df_prices)} rows of prices")
-  cli::cli_alert_info("\tgot daily data from {min(df_prices$date)} to {max(df_prices$date)}")
+  cli::cli_alert_success("got {nrow(df_prices)} rows of prices")
+  cli::cli_alert_info("got daily data from {min(df_prices$date)} to {max(df_prices$date)}")
 
   return(df_prices)
 

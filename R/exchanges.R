@@ -3,6 +3,8 @@
 #' @return a dataframe with information about available exchanges
 #' @export
 #'
+#' @inheritParams get_fundamentals
+#'
 #' @examples
 #'
 #' # you need a valid token (not test) for this to work

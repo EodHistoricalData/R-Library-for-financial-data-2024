@@ -7,7 +7,8 @@
 set_token(token = get_demo_token())
 }
 \arguments{
-\item{token}{the token from eodhd. The default value is a demo token "demo", which allows for partial access to the data}
+\item{token}{the token from eodhd. The default value is a demo token "demo", which allows for partial access to the data.
+See \code{\link[=get_demo_token]{get_demo_token()}} for using a demo token.}
 }
 \value{
 Nothing

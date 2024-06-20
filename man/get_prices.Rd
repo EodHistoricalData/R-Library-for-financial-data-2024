@@ -14,20 +14,21 @@ get_prices(
 \arguments{
 \item{ticker}{A company ticker (e.g. AAPL). You can find all tickers for a particular exchange with \code{\link[=get_tickers]{get_tickers()}}.}
 
-\item{exchange}{A exchange symbol (e.g. US). You can find all tickers for a particular exchange with \code{\link[=get_tickers]{get_tickers()}}.}
+\item{exchange}{A exchange symbol (e.g. US). You can find all tickers for a particular exchange with \code{\link[=get_tickers]{get_tickers()}}. Be aware that, for US companies, the exchange symbols is simply "US"}
 
 \item{cache_folder}{A local directory to store cache files. By default, all functions use a temporary path, meaning that the caching system
 is session persistent (it will remove all files when you exit your R session). If you want a persistent caching system, simply point argument
 cache_folder to a local directory in your filesystem. Be aware, however, that a persistent cache will not refresh your data for new api queries.}
 
-\item{check_quota}{A flag (TRUE/FALSE) for whether to check the current quota status from the api. This option has a small cost of execution
+\item{check_quota}{A flag (TRUE/FALSE) for whether to check the current quota status from the api. This option implies a small cost of execution
 time. If you need speed, just set it to FALSE.}
 }
 \value{
 A dataframe with prices
 }
 \description{
-This function will return daily stock price from a set of ticker and exchange.
+This function will query the price end point of eodhd and return daily stock price from a set of ticker and exchange.
+It also includes the daily stock return (percentage variation).
 }
 \examples{
 set_token("demo")

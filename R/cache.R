@@ -40,7 +40,7 @@ write_cache <- function(x, f_out) {
 #' @noRd
 read_cache <- function(f_cache) {
 
-  cli::cli_alert_info("\tusing local cache with file {basename(f_cache)}")
+  cli::cli_alert_info("using local cache with file {basename(f_cache)}")
 
   x <- readr::read_rds(f_cache)
 
