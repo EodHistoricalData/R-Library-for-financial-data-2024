@@ -42,7 +42,8 @@ get_prices <- function(ticker = "AAPL",
       ticker = ticker,
       exchange = exchange
     ) |>
-    dplyr::mutate(date = as.Date(date))
+    dplyr::mutate(date = as.Date(date),
+                  ret_adj_close = adjusted_close/dplyr::lag(adjusted_close) - 1)
 
   write_cache(df_prices, f_out)
 
