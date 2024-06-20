@@ -2,7 +2,7 @@ Package: eodhd2
 Type: Package
 Title: Second and backward-incompatible version of R package eodhd
 Version: 0.5.0
-Author: Who wrote it
+Author: Marcelo S. Perlin <marceloperlin@gmail.com>
 Maintainer: Marcelo S. Perlin <marceloperlin@gmail.com>
 Description: R port of eodhd API <https://eodhd.com/>, extended with a cache and quota system, 
  also offering functions for cleaning and aggregating the financial data. 

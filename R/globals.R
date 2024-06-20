@@ -3,7 +3,8 @@
 # source: https://community.rstudio.com/t/how-to-solve-no-visible-binding-
 #         for-global-variable-note/28887
 my_globals <- c(
-  "filing_date"
+  "filing_date",
+  "adjusted_close"
 )
 
 utils::globalVariables(my_globals)

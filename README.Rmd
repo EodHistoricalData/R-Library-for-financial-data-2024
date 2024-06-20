@@ -49,11 +49,12 @@ Package eodhd2 is the second and backwards incompatible version of [eodhd](https
 devtools::install_github("msperlin/eodhd2")
 ```
 
+
 # Usage
 
 ## Authentication
 
-After registering at the [website](https://eodhd.com/) and choosing a subscription, all users will authenticate an R session using a token from the website. For that:
+After registering in the [eodhd website](https://eodhd.com/) and choosing a subscription, all users will authenticate an R session using a token from the website. For that:
 
 1) Create an account at [https://eodhd.com/](https://eodhd.com/)
 2) Go in "Settings" and look for your API token
@@ -135,6 +136,7 @@ l_fun <- eodhd2::get_fundamentals(ticker, exchange)
 names(l_fun)
 ```
 
+
 ## Parsing financials (wide table)
 
 ```{r}
@@ -142,6 +144,7 @@ wide_financials <- eodhd2::parse_financials(l_fun, "wide")
 
 head(wide_financials)
 ```
+
 
 ## Parsing financials (long table)
 

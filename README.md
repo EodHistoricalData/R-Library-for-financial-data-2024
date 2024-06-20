@@ -51,9 +51,9 @@ devtools::install_github("msperlin/eodhd2")
 
 ## Authentication
 
-After registering at the [website](https://eodhd.com/) and choosing a
-subscription, all users will authenticate an R session using a token
-from the website. For that:
+After registering in the [eodhd website](https://eodhd.com/) and
+choosing a subscription, all users will authenticate an R session using
+a token from the website. For that:
 
 1)  Create an account at <https://eodhd.com/>
 2)  Go in “Settings” and look for your API token
@@ -75,7 +75,7 @@ token <- eodhd2::get_demo_token()
 eodhd2::set_token(token)
 #> ✔ eodhd API token set
 #> ℹ Account name: API Documentation 2 (supportlevel1@eodhistoricaldata.com)
-#> ℹ Quota: 57033 | 10000000
+#> ℹ Quota: 37531 | 10000000
 #> ℹ Subscription: demo
 #> ✖ You are using a **DEMONSTRATION** token for testing pourposes, with limited access to the data repositories.
 #> See <https://eodhd.com/> for registration and, after finding your token, use it with function eodhd2::set_token(TOKEN).
@@ -92,10 +92,10 @@ exchange <- "US"
 df_prices <- eodhd2::get_prices(ticker, exchange)
 #> 
 #> ── retrieving price data for ticker AAPL|US ────────────────────────────────────
-#> ! Quota status: 57034|10000000, refreshing in 6.95 hours
-#> ℹ cache file '/tmp/RtmpjBU71O/eodhd2-cache/AAPL_US_eodhd_prices.rds' saved
-#> ✔    got 10959 rows of prices
-#> ℹ    got daily data from 1980-12-12 to 2024-06-03
+#> ! Quota status: 37531|10000000, refreshing in 12.4 hours
+#> ℹ cache file '/tmp/Rtmp1ImxEq/eodhd2-cache/AAPL_US_eodhd_prices.rds' saved
+#> ✔    got 10970 rows of prices
+#> ℹ    got daily data from 1980-12-12 to 2024-06-18
 ```
 
 ``` r
@@ -108,13 +108,13 @@ head(df_prices)
 #> 4 1980-12-17 25.8720 26.0064 25.8720 25.8720         0.0892  86441600   AAPL
 #> 5 1980-12-18 26.6336 26.7456 26.6336 26.6336         0.0918  73449600   AAPL
 #> 6 1980-12-19 28.2464 28.3808 28.2464 28.2464         0.0973  48630400   AAPL
-#>   exchange
-#> 1       US
-#> 2       US
-#> 3       US
-#> 4       US
-#> 5       US
-#> 6       US
+#>   exchange ret_adj_close
+#> 1       US            NA
+#> 2       US   -0.05151515
+#> 3       US   -0.07348243
+#> 4       US    0.02528736
+#> 5       US    0.02914798
+#> 6       US    0.05991285
 ```
 
 ``` r
@@ -142,8 +142,8 @@ exchange <- "US"
 df_div <- eodhd2::get_dividends(ticker, exchange)
 #> 
 #> ── retrieving dividends for ticker AAPL|US ─────────────────────────────────────
-#> ! Quota status: 57037|10000000, refreshing in 6.94 hours
-#> ℹ cache file '/tmp/RtmpjBU71O/eodhd2-cache/AAPL_US_eodhd_dividends.rds' saved
+#> ! Quota status: 37540|10000000, refreshing in 12.4 hours
+#> ℹ cache file '/tmp/Rtmp1ImxEq/eodhd2-cache/AAPL_US_eodhd_dividends.rds' saved
 #> ✔    got 83 rows of dividend data
 ```
 
@@ -190,7 +190,7 @@ exchange <- "US"
 l_fun <- eodhd2::get_fundamentals(ticker, exchange)
 #> 
 #> ── retrieving fundamentals for ticker AAPL|US ──────────────────────────────────
-#> ! Quota status: 57038|10000000, refreshing in 6.94 hours
+#> ! Quota status: 37543|10000000, refreshing in 12.4 hours
 #> ✔    querying API
 #> ✔    got 13 elements in raw list
 ```

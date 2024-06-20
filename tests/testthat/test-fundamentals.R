@@ -1,6 +1,5 @@
 test_that("fundamentals", {
 
-
   temp_cache_folder <- fs::path_temp("oedhd-test-cache")
 
   suppressMessages({
