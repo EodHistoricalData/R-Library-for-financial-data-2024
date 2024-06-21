@@ -20,7 +20,9 @@ get_exchanges <- function(cache_folder = get_default_cache()) {
   token <- get_token()
 
   if (token == get_demo_token()) {
-    cli::cli_abort("You need a proper token (not \"{get_demo_token()}\") for retrieving the list of exchanges.")
+    cli::cli_abort(
+      "You need a proper token (not \"{get_demo_token()}\") for retrieving the list of exchanges."
+      )
   }
 
   f_out <-get_cache_file("cache", "exchange", cache_folder, "exchange-list")

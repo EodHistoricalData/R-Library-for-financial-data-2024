@@ -52,7 +52,7 @@ set_token <- function(token = get_demo_token()) {
 #' get_demo_token()
 get_demo_token <- function() {
 
-  token = "demo"
+  token <- "demo"
 
   return(token)
 }

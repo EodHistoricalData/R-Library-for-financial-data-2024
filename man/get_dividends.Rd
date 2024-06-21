@@ -27,7 +27,8 @@ time. If you need speed, just set it to FALSE.}
 A dataframe with dividend information
 }
 \description{
-This function will query the dividend end point \url{https://eodhd.com/financial-apis/api-splits-dividends} and return:
+This function will query the dividend end point
+\url{https://eodhd.com/financial-apis/api-splits-dividends} and return:
 \itemize{
 \item dates (declaration, record, payment)
 \item value of dividend (adjusted and unajusted)

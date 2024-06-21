@@ -7,6 +7,8 @@ Maintainer: Marcelo S. Perlin <marceloperlin@gmail.com>
 Description: R port of eodhd API <https://eodhd.com/>, extended with a cache and quota system, 
  also offering functions for cleaning and aggregating the financial data. 
 License: MIT + file LICENSE
+URL: https://github.com/msperlin/eodhd2
+BugReports: https://github.com/msperlin/eodhd2/issues
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

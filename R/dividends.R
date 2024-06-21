@@ -1,6 +1,7 @@
 #' Retrieves dividend data from the api
 #'
-#' This function will query the dividend end point <https://eodhd.com/financial-apis/api-splits-dividends> and return:
+#' This function will query the dividend end point
+#' <https://eodhd.com/financial-apis/api-splits-dividends> and return:
 #' * dates (declaration, record, payment)
 #' * value of dividend (adjusted and unajusted)
 #' * currency of dividend
@@ -34,7 +35,9 @@ get_dividends <- function(ticker = "AAPL", exchange = "US",
     df_div <- read_cache(f_out)
 
   } else {
-    url <- glue::glue('https://eodhd.com/api/div/{ticker}.{exchange}?api_token={token}&fmt=json')
+    url <- glue::glue(
+      'https://eodhd.com/api/div/{ticker}.{exchange}?api_token={token}&fmt=json'
+      )
 
     content <- query_api(url)
 
