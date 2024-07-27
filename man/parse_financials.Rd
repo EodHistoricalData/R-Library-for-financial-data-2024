@@ -11,7 +11,8 @@ parse_financials(l_out, type_table = "long")
 
 \item{type_table}{Format of table in output ("wide" or "long").
 A "wide" table is a typical Excel column-oriented table where each columns is a data/year.
-A long type of table row-oriented, where each each point of new information is a row of the table. The data is the same, it just changes the orientation of rows/columns.
+A long type of table row-oriented, where each each point of new information is
+a row of the table. The data is the same, it just changes the orientation of rows/columns.
 The default value is a "long" table.}
 }
 \description{

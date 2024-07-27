@@ -29,7 +29,7 @@ get_exchanges <- function(cache_folder = get_default_cache()) {
 
   if (fs::file_exists(f_out)) {
 
-    df_div <- read_cache(f_out)
+    df_exc <- read_cache(f_out)
 
   } else {
 
