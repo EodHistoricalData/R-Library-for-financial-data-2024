@@ -1,0 +1,152 @@
+---
+title: "Documentation to site"
+author: "Marcelo S. Perlin"
+format: html
+editor: visual
+---
+
+# R Library for financial data by EODHD
+
+R is an open-source programming language that has gained immense popularity in the data science community for its robust statistical capabilities and visualization tools. Whether you’re a budding data analyst or a professional trader, EODHD’s R library provides a versatile environment for handling vast financial data, creating visualizations, and conducting sophisticated analyses.
+
+In this quick guide, we will show you how to install the library and use its most popular functions.
+
+Upgrade package
+
+Quick jump:
+
+Installation and examples
+R library installation process
+API access activation: free and payed options
+Information about a function
+Example: End of the day historical stock market data
+List of the available functions
+Direct EODHD request call in R enviroment
+More on EODHD API
+Installation and examples
+First things first, ensure you have R and RStudio installed on your machine. RStudio is an integrated development environment (IDE) that makes working with R more convinient. You can download R from CRAN and RStudio from RStudio’s official website. Following guide will be based on RStudio.
+
+Required Environment:
+
+R version from 4.3.1 to latest
+R Studio
+Feel free to visit our Github page to subscribe to receive notifications about future updates for R library.
+
+R library installation process
+1. Installing the library. Type the following command and hit Enter:
+
+install.packages("eodhd")
+See the screenshot:
+
+
+2. Library Import. Next, let’s import EODHD library for accessing EODHD API’s functions:
+
+```{r}
+#| eval: false
+library("eodhd")
+```
+
+
+See the screenshot:
+
+
+R Financial Library is installed now. Next, we are going to activate EODHD’s API key to get an access to data.
+
+API access activation: free and payed options
+1. You can start with “DEMO” API key to test the data for a few tickers only: AAPL.US, TSLA.US , VTI.US, AMZN.US, BTC-USD and EUR-USD. For these tickers, all of our APIs, including Real-Time Data, are availible without limitations.
+2. Register for the free plan to receive your API key (limited to 20 API calls per day) with access to End-Of-Day Historical Stock Market Data API for any ticker, but within the past year only. Plus a List of tickers per Exchange is availible.
+3. We recommend exploring our plans, starting from $19.99, to access the necessary type of API without limitations.
+
+Upgrade package
+
+Once you have EODHD API key, you can set it in an additional file, for example “key.R”:
+
+api_key <- 'demo'
+To implement the “key.R” file in your code:
+
+source("key.R")
+print(api_key)
+Or set the type as an argument for the function:
+
+api_token='demo'
+Having implemented an active API key, we are ready to call for data.
+
+Information about a function
+To access all information about a specific function, you can use the help command:
+
+help(get_eod_historical_stock_market_data)
+See the example:
+
+
+Scroll down to the end of this guide to see all availible functions.
+
+Example: End of the day historical stock market data
+Lets call for End of the day historical stock market data:
+
+get_eod_historical_stock_market_data(
+    api_token = "demo",
+    symbol = "AAPL",
+    from_date = NULL,
+    to_date = NULL,
+    period = "d",
+    order = "a"
+)
+See the example:
+
+
+The function will return the following JSON respond:
+
+
+All the parameters for this function are listed and described here.
+
+List of the available functions
+Below is the list of functions to retrieve various data, including code examples and links to documentation containing descriptions of all parameters:
+
+Function & description	Code examples
+Live (Delayed) Stock Prices and Macroeconomic Data (doc)	
+get_live_stock_prices <- function(api_token, ticker, s = NULL)
+Bonds Fundamentals (doc)	
+get_bonds_fundamentals_data( api_token <- "demo", isin <- "DE000CB83CF0" )
+Intraday Historical Data (doc)	
+get_intraday_historical_data( api_token <- "YOUR_API_TOKEN", interval <- "5m", from_unix_time <- "1627896900", to_unix_time <- "1630575300", symbol <- "AAPL.MX")
+Historical Dividends (doc)	
+get_historical_dividends_data( api_token <- "demo", ticker <- "AAPL.US", date_from <- "2017-09-10", date_to <- "2017-09-12" )
+Historical Splits (doc)	
+get_historical_splits_data( api_token <- "demo",  ticker <- "AAPL.US",  date_from <- "2017-09-10", date_to <- "2017-09-12" )
+Bulk API for EOD, Splits and Dividends (doc)	
+get_bulk_eod_splits_dividends_data( api_token = "demo", country = 'US', type = 'splits', date = "2010-09-21", symbols = "MSFT", filter = "extended" )
+Calendar. Upcoming Earnings, Trends, IPOs and Splits (doc)	
+get_upcoming_earnings_data( api_token <- "demo", from_date <- "2017-09-10", to_date <- "2017-09-12", symbols <- "AAPL" )
+get_earning_trends_data(  api_token = "demo",  symbols = "AAPL.US" ) # for Earnings trends
+
+get_upcoming_IPOs_data( api_token <- "YOUR_API_TOKEN", from_date <- "2017-09-10", to_date <- "2017-09-12" ) # for upcoming IPOs
+
+get_upcoming_splits_data( api_token <- "YOUR_API_TOKEN", from_date <- "2017-09-10", to_date <- "2017-09-12" ) # for upcoming splits
+Economic Events (doc)	
+get_economic_events_data( api_token <- "demo", date_from <- "2017-09-10", date_to <- "2017-09-12", country <- "US", comparison <- "qoq", offset <- "0", limit <- "50" )
+Stock Market and Financial News (doc)	
+financial_news( api_token <- "demo", s <- "balance sheet", t <- NULL, from_date <- "2017-09-10", to_date <- "2017-09-12", limit <- "50", offset <- "100" )
+End of the Day Historical Stock Market Data (doc)	
+get_eod_historical_stock_market_data <- function( api_token, symbol, from_date = NULL,
+to_date = NULL, period = 'd', order = 'a' )
+List of supported Exchanges (doc)	
+get_list_of_exchanges( api_token <- "demo" )
+Insider Transactions (doc)	
+get_insider_transactions_data( api_token <- "demo", date_from <- "2017-09-10", date_to <- "2017-09-12", code <- "AAPL.US", limit <- "150" )
+Macro Indicators (doc)	
+get_macro_indicators_data( api_token <- "YOUR_API_TOKEN", country <- "USA", indicator <- "gdp_current_usd" )
+Exchanges API. Trading Hours, Stock Market Holidays, Symbols Change History (doc)	
+get_details_trading_hours_stock_market_holidays( api_token <- "YOUR_API_TOKEN", code <- "US", from_date <- "2017-09-10", to_date <- "2017-09-12") 
+
+symbol_change_history(api_token <- "YOUR_API_TOKEN", from_date <- "2023-01-01", to_date <- "2023-12-31" )
+Stock Market Screener (doc)	
+stock_market_screener( api_token <- "YOUR_API_TOKEN",  sort <- "market_capitalization.desc", filters <- NULL, limit <- "1", signals <- "bookvalue_neg", offset <- "50" )
+Technical Indicator (doc)	
+get_technical_indicator_data( api_token <- "demo", ticker <- "AAPL.US", func <- "slope", period <- 100 )
+Historical Market Capitalization (doc)	
+get_historical_market_capitalization_data <- function( api_token, ticker,
+from_date = NULL,
+to_date = NULL )
+Fundamental Data: Stocks, ETFs, Mutual Funds, Indices and Cryptocurrencies (doc)	
+get_fundamentals_data( api_token <- "demo", ticker <- "AAPL.US" )
+
