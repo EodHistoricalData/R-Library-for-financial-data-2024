@@ -7,6 +7,7 @@ get_default_cache <- function() {
 
 }
 
+
 #' Creates path of cache file
 #'
 #' @noRd
