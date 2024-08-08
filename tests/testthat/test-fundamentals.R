@@ -1,5 +1,9 @@
 test_that("fundamentals", {
 
+  # test relies on calling api (we skip it on cran to save network bandwith)
+  skip_if_offline()
+  skip_on_cran() # too heavy for cran
+
   temp_cache_folder <- fs::path_temp("oedhd-test-cache")
 
   suppressMessages({

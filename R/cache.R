@@ -3,7 +3,7 @@
 #' @noRd
 get_default_cache <- function() {
 
-  return(fs::path_temp("eodhd2-cache"))
+  return(fs::path_temp("eodhdR2-cache"))
 
 }
 

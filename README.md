@@ -1,14 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# About eodhd2
+# About eodhdR2
 
 ![](inst/extdata/figs/website-eodhd.png)
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/msperlin/eodhd2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/msperlin/eodhd2/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/github/msperlin/eodhd2/graph/badge.svg?token=9Y5GNHALC4)](https://codecov.io/github/msperlin/eodhd2)
+[![R-CMD-check](https://github.com/EodHistoricalData/R-Library-for-financial-data-2024/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EodHistoricalData/R-Library-for-financial-data-2024/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://github.com/EodHistoricalData/R-Library-for-financial-data-2024/graph/badge.svg?token=9Y5GNHALC4)](https://codecov.io/github/msperlin/eodhdR2)
 <!-- badges: end -->
 
 [eodhd](https://eodhd.com/) is a private company that offers APIs to a
@@ -22,7 +22,7 @@ exchanges across the world. This includes:
 - Valuation indicators
 - And [more](https://eodhd.com/)..
 
-Package eodhd2 is the second and backwards incompatible version of
+Package eodhdR2 is the second and backwards incompatible version of
 [eodhd](https://github.com/EodHistoricalData/EODHD-APIs-R-Financial-Library),
 allowing fast and intelligent access to most of the API’s endpoints.
 
@@ -41,10 +41,10 @@ allowing fast and intelligent access to most of the API’s endpoints.
 
 ``` r
 # not yet in CRAN
-#install.package("eodhd2")
+#install.package("eodhdR2")
 
 # development version
-devtools::install_github("msperlin/eodhd2")
+devtools::install_github("EodHistoricalData/R-Library-for-financial-data-2024")
 ```
 
 # Usage
@@ -60,25 +60,27 @@ a token from the website. For that:
 
 ![](inst/extdata/figs/token.png)
 
-While using `eodhd2`, all authentications are managed with function
-`eodhd2::set_token()`:
+While using `eodhdR2`, all authentications are managed with function
+`eodhdR2::set_token()`:
 
 ``` r
-eodhd2::set_token("YOUR_TOKEN")
+eodhdR2::set_token("YOUR_TOKEN")
 ```
 
 Alternatively, while testing the API, you can use the “demo” token for
 demonstration.
 
 ``` r
-token <- eodhd2::get_demo_token()
-eodhd2::set_token(token)
+token <- eodhdR2::get_demo_token()
+eodhdR2::set_token(token)
 #> ✔ eodhd API token set
 #> ℹ Account name: API Documentation 2 (supportlevel1@eodhistoricaldata.com)
-#> ℹ Quota: 37531 | 10000000
+#> ℹ Quota: 93059 | 10000000
 #> ℹ Subscription: demo
-#> ✖ You are using a **DEMONSTRATION** token for testing pourposes, with limited access to the data repositories.
-#> See <https://eodhd.com/> for registration and, after finding your token, use it with function eodhd2::set_token(TOKEN).
+#> ✖ You are using a **DEMONSTRATION** token for testing pourposes, with
+#> limited access to the data repositories. See <https://eodhd.com/>
+#> for registration and, after finding your token, use it with
+#> function eodhdR2::set_token("TOKEN").
 ```
 
 # Examples
@@ -89,16 +91,13 @@ eodhd2::set_token(token)
 ticker <- "AAPL"
 exchange <- "US"
 
-df_prices <- eodhd2::get_prices(ticker, exchange)
+df_prices <- eodhdR2::get_prices(ticker, exchange)
 #> 
 #> ── retrieving price data for ticker AAPL|US ────────────────────────────────────
-#> ! Quota status: 37531|10000000, refreshing in 12.4 hours
-#> ℹ cache file '/tmp/Rtmp1ImxEq/eodhd2-cache/AAPL_US_eodhd_prices.rds' saved
-#> ✔    got 10970 rows of prices
-#> ℹ    got daily data from 1980-12-12 to 2024-06-18
-```
-
-``` r
+#> ! Quota status: 93061|10000000, refreshing in 7.05 hours
+#> ℹ cache file '/tmp/RtmpYbgPIo/eodhdR2-cache/AAPL_US_eodhd_prices.rds' saved
+#> ✔ got 11004 rows of prices
+#> ℹ got daily data from 1980-12-12 to 2024-08-07
 
 head(df_prices)
 #>         date    open    high     low   close adjusted_close    volume ticker
@@ -139,15 +138,12 @@ p
 ticker <- "AAPL"
 exchange <- "US"
 
-df_div <- eodhd2::get_dividends(ticker, exchange)
+df_div <- eodhdR2::get_dividends(ticker, exchange)
 #> 
 #> ── retrieving dividends for ticker AAPL|US ─────────────────────────────────────
-#> ! Quota status: 37540|10000000, refreshing in 12.4 hours
-#> ℹ cache file '/tmp/Rtmp1ImxEq/eodhd2-cache/AAPL_US_eodhd_dividends.rds' saved
-#> ✔    got 83 rows of dividend data
-```
-
-``` r
+#> ! Quota status: 93064|10000000, refreshing in 7.05 hours
+#> ℹ cache file '/tmp/RtmpYbgPIo/eodhdR2-cache/AAPL_US_eodhd_dividends.rds' saved
+#> ✔ got 84 rows of dividend data
 
 head(df_div)
 #>         date ticker exchange declarationDate recordDate paymentDate period
@@ -187,15 +183,12 @@ p
 ticker <- "AAPL"
 exchange <- "US"
 
-l_fun <- eodhd2::get_fundamentals(ticker, exchange)
+l_fun <- eodhdR2::get_fundamentals(ticker, exchange)
 #> 
 #> ── retrieving fundamentals for ticker AAPL|US ──────────────────────────────────
-#> ! Quota status: 37543|10000000, refreshing in 12.4 hours
-#> ✔    querying API
-#> ✔    got 13 elements in raw list
-```
-
-``` r
+#> ! Quota status: 93066|10000000, refreshing in 7.05 hours
+#> ✔ querying API
+#> ✔ got 13 elements in raw list
 
 names(l_fun)
 #>  [1] "General"             "Highlights"          "Valuation"          
@@ -208,7 +201,7 @@ names(l_fun)
 ## Parsing financials (wide table)
 
 ``` r
-wide_financials <- eodhd2::parse_financials(l_fun, "wide")
+wide_financials <- eodhdR2::parse_financials(l_fun, "wide")
 #> 
 #> ── Parsing financial data for Apple Inc | AAPL ──
 #> 
@@ -222,9 +215,6 @@ wide_financials <- eodhd2::parse_financials(l_fun, "wide")
 #> ℹ    quarterly
 #> ℹ    yearly
 #> ✔ got 561 rows of financial data (wide format)
-```
-
-``` r
 
 head(wide_financials)
 #> # A tibble: 6 × 127
@@ -248,7 +238,7 @@ head(wide_financials)
 ## Parsing financials (long table)
 
 ``` r
-long_financials <- eodhd2::parse_financials(l_fun, "long")
+long_financials <- eodhdR2::parse_financials(l_fun, "long")
 #> 
 #> ── Parsing financial data for Apple Inc | AAPL ──
 #> 
@@ -262,9 +252,6 @@ long_financials <- eodhd2::parse_financials(l_fun, "long")
 #> ℹ    quarterly
 #> ℹ    yearly
 #> ✔ got 67320 rows of financial data (long format)
-```
-
-``` r
 
 head(long_financials)
 #> # A tibble: 6 × 9

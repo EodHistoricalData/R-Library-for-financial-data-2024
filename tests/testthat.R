@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(eodhd2)
+library(eodhdR2)
 
-test_check("eodhd2")
+test_check("eodhdR2")

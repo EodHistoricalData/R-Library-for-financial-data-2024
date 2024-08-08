@@ -1,5 +1,9 @@
 test_that("dividends", {
 
+  # test relies on calling api (we skip it on cran to save network)
+  skip_if_offline()
+  skip_on_cran() # too heavy for cran
+
   suppressMessages({
     set_token()
 

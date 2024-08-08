@@ -1,3 +1,3 @@
-## Version 0.5 (2024-06-20)
+## Version 0.5 (2024-08-08)
 
-- first version
+- first version on CRAN
