@@ -8,7 +8,6 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/EodHistoricalData/R-Library-for-financial-data-2024/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EodHistoricalData/R-Library-for-financial-data-2024/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://github.com/EodHistoricalData/R-Library-for-financial-data-2024/graph/badge.svg?token=9Y5GNHALC4)](https://codecov.io/github/msperlin/eodhdR2)
 <!-- badges: end -->
 
 [eodhd](https://eodhd.com/) is a private company that offers APIs to a
@@ -75,7 +74,7 @@ token <- eodhdR2::get_demo_token()
 eodhdR2::set_token(token)
 #> ✔ eodhd API token set
 #> ℹ Account name: API Documentation 2 (supportlevel1@eodhistoricaldata.com)
-#> ℹ Quota: 93059 | 10000000
+#> ℹ Quota: 94929 | 10000000
 #> ℹ Subscription: demo
 #> ✖ You are using a **DEMONSTRATION** token for testing pourposes, with
 #> limited access to the data repositories. See <https://eodhd.com/>
@@ -94,8 +93,8 @@ exchange <- "US"
 df_prices <- eodhdR2::get_prices(ticker, exchange)
 #> 
 #> ── retrieving price data for ticker AAPL|US ────────────────────────────────────
-#> ! Quota status: 93061|10000000, refreshing in 7.05 hours
-#> ℹ cache file '/tmp/RtmpYbgPIo/eodhdR2-cache/AAPL_US_eodhd_prices.rds' saved
+#> ! Quota status: 94930|10000000, refreshing in 6.57 hours
+#> ℹ cache file '/tmp/Rtmperw7sw/eodhdR2-cache/AAPL_US_eodhd_prices.rds' saved
 #> ✔ got 11004 rows of prices
 #> ℹ got daily data from 1980-12-12 to 2024-08-07
 
@@ -141,8 +140,8 @@ exchange <- "US"
 df_div <- eodhdR2::get_dividends(ticker, exchange)
 #> 
 #> ── retrieving dividends for ticker AAPL|US ─────────────────────────────────────
-#> ! Quota status: 93064|10000000, refreshing in 7.05 hours
-#> ℹ cache file '/tmp/RtmpYbgPIo/eodhdR2-cache/AAPL_US_eodhd_dividends.rds' saved
+#> ! Quota status: 94945|10000000, refreshing in 6.56 hours
+#> ℹ cache file '/tmp/Rtmperw7sw/eodhdR2-cache/AAPL_US_eodhd_dividends.rds' saved
 #> ✔ got 84 rows of dividend data
 
 head(df_div)
@@ -186,7 +185,7 @@ exchange <- "US"
 l_fun <- eodhdR2::get_fundamentals(ticker, exchange)
 #> 
 #> ── retrieving fundamentals for ticker AAPL|US ──────────────────────────────────
-#> ! Quota status: 93066|10000000, refreshing in 7.05 hours
+#> ! Quota status: 94958|10000000, refreshing in 6.56 hours
 #> ✔ querying API
 #> ✔ got 13 elements in raw list
 
