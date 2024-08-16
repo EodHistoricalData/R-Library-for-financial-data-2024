@@ -23,9 +23,11 @@ Cashflow statement and Income statement. Whenever no financial data is found in
 l_out, the function returns an empty dataframe.
 }
 \examples{
+\dontrun{
 set_token(get_demo_token())
 l_out <- get_fundamentals(ticker = "AAPL", exchange = "US")
 
 df_fin <- parse_financials(l_out, "long")
 df_fin
+}
 }

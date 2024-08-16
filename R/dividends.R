@@ -13,9 +13,11 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' set_token(get_demo_token())
 #' df_div <- get_dividends(ticker = "AAPL", exchange = "US")
 #' df_div
+#' }
 get_dividends <- function(ticker = "AAPL", exchange = "US",
                           cache_folder = get_default_cache(),
                           check_quota = TRUE) {

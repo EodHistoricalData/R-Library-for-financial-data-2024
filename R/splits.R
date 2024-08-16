@@ -9,7 +9,8 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{# requires a subscription (paid) token
+#' \dontrun{
+#' # requires a subscription (paid) token
 #'  df_split <- get_splits(ticker = "AAPL", exchange = "US")
 #' }
 get_splits <- function(ticker = "AAPL", exchange = "US",

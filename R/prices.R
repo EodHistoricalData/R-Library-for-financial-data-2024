@@ -9,8 +9,10 @@
 #' @export
 #'
 #' @examples
-#' set_token("demo")
+#' \dontrun{
+#' set_token(get_demo_token())
 #' df_prices <- get_prices(ticker = "AAPL", exchange = "US")
+#' }
 get_prices <- function(ticker = "AAPL",
                        exchange = "US",
                        cache_folder = get_default_cache(),

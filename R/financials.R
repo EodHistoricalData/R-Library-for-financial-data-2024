@@ -16,11 +16,13 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' set_token(get_demo_token())
 #' l_out <- get_fundamentals(ticker = "AAPL", exchange = "US")
 #'
 #' df_fin <- parse_financials(l_out, "long")
 #' df_fin
+#' }
 parse_financials <- function(l_out, type_table = "long") {
 
   possible_values <- c("long", "wide")

@@ -36,7 +36,9 @@ This function will query the dividend end point
 }
 }
 \examples{
+\dontrun{
 set_token(get_demo_token())
 df_div <- get_dividends(ticker = "AAPL", exchange = "US")
 df_div
+}
 }

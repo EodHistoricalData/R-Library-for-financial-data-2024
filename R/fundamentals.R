@@ -20,9 +20,11 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' set_token(get_demo_token())
 #' l_out <- get_fundamentals(ticker = "AAPL", exchange = "US")
 #' names(l_out)
+#' }
 get_fundamentals <- function(ticker = "AAPL",
                              exchange = "US",
                              cache_folder = get_default_cache(),

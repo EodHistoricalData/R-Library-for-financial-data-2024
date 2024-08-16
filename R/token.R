@@ -10,7 +10,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' set_token()
+#' }
 set_token <- function(token = get_demo_token()) {
 
   Sys.setenv("eodhd-token" = token)

@@ -31,6 +31,8 @@ This function will query the price end point of eodhd and return daily stock pri
 It also includes the daily stock return (percentage variation).
 }
 \examples{
-set_token("demo")
+\dontrun{
+set_token(get_demo_token())
 df_prices <- get_prices(ticker = "AAPL", exchange = "US")
+}
 }

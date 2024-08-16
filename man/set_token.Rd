@@ -18,5 +18,7 @@ Uses the token from \url{https://eodhd.com/cp/dashboard} to authenticate your R 
 Alternatively, a demo token is also available for testing purposes, with a limited supply of data.
 }
 \examples{
+\dontrun{
 set_token()
+}
 }

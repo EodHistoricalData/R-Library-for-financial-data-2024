@@ -30,7 +30,8 @@ A dataframe with split information
 This function will query the splits end point of eodhd and return all split information for a given stock/exchange.
 }
 \examples{
-\dontrun{# requires a subscription (paid) token
+\dontrun{
+# requires a subscription (paid) token
  df_split <- get_splits(ticker = "AAPL", exchange = "US")
 }
 }
