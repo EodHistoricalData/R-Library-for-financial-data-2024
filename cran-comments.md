@@ -4,9 +4,11 @@
 
 * This is a new release.
 * tested on [github action](https://github.com/EodHistoricalData/R-Library-for-financial-data-2024/actions), passing for windows (latest), macos (latest) and ubuntu (latest)
+
+### Fixes for CRAN issues
 * Fixed issue with api and package names in title and description. Now using single quote, e.g. `EODHD`
 * Fixed issue with return value of function `parse_financials()`
-* Added copyright holder anc ctr tag for myself at DESCRIPTION: 
+* Added new person (copyright holder) and "ctr" tag for myself at DESCRIPTION: 
 
 Authors@R: c(
   person(given = c("Marcelo", "S."),
