@@ -13,6 +13,8 @@
 #' a row of the table. The data is the same, it just changes the orientation of rows/columns.
 #' The default value is a "long" table.
 #'
+#' @returns A dataframe with organized financial data in the wide or long format
+#'
 #' @export
 #'
 #' @examples

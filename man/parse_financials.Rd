@@ -15,6 +15,9 @@ A long type of table row-oriented, where each each point of new information is
 a row of the table. The data is the same, it just changes the orientation of rows/columns.
 The default value is a "long" table.}
 }
+\value{
+A dataframe with organized financial data in the wide or long format
+}
 \description{
 This function will organize the raw financial data from \code{\link[=get_fundamentals]{get_fundamentals()}},
 aggregating all information into a single dataframe,
