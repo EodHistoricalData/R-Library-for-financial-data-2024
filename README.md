@@ -39,8 +39,8 @@ allowing fast and intelligent access to most of the API’s endpoints.
 # Installation
 
 ``` r
-# not yet in CRAN
-#install.package("eodhdR2")
+# available in CRAN
+install.package("eodhdR2")
 
 # development version
 devtools::install_github("EodHistoricalData/R-Library-for-financial-data-2024")
@@ -74,7 +74,7 @@ token <- eodhdR2::get_demo_token()
 eodhdR2::set_token(token)
 #> ✔ eodhd API token set
 #> ℹ Account name: API Documentation 2 (supportlevel1@eodhistoricaldata.com)
-#> ℹ Quota: 94929 | 10000000
+#> ℹ Quota: 63463 | 10000000
 #> ℹ Subscription: demo
 #> ✖ You are using a **DEMONSTRATION** token for testing pourposes, with
 #> limited access to the data repositories. See <https://eodhd.com/>
@@ -93,26 +93,26 @@ exchange <- "US"
 df_prices <- eodhdR2::get_prices(ticker, exchange)
 #> 
 #> ── retrieving price data for ticker AAPL|US ────────────────────────────────────
-#> ! Quota status: 94930|10000000, refreshing in 6.57 hours
-#> ℹ cache file '/tmp/Rtmperw7sw/eodhdR2-cache/AAPL_US_eodhd_prices.rds' saved
-#> ✔ got 11004 rows of prices
-#> ℹ got daily data from 1980-12-12 to 2024-08-07
+#> ! Quota status: 63463|10000000, refreshing in 5.8 hours
+#> ℹ cache file AAPL_US_eodhd_prices.rds saved
+#> ✔ got 11021 rows of prices
+#> ℹ got daily data from 1980-12-12 to 2024-08-30
 
 head(df_prices)
 #>         date    open    high     low   close adjusted_close    volume ticker
-#> 1 1980-12-12 28.7392 28.8736 28.7392 28.7392         0.0990 469033600   AAPL
-#> 2 1980-12-15 27.3728 27.3728 27.2608 27.2608         0.0939 175884800   AAPL
-#> 3 1980-12-16 25.3792 25.3792 25.2448 25.2448         0.0870 105728000   AAPL
-#> 4 1980-12-17 25.8720 26.0064 25.8720 25.8720         0.0892  86441600   AAPL
-#> 5 1980-12-18 26.6336 26.7456 26.6336 26.6336         0.0918  73449600   AAPL
-#> 6 1980-12-19 28.2464 28.3808 28.2464 28.2464         0.0973  48630400   AAPL
+#> 1 1980-12-12 28.7392 28.8736 28.7392 28.7392         0.0989 469033600   AAPL
+#> 2 1980-12-15 27.3728 27.3728 27.2608 27.2608         0.0938 175884800   AAPL
+#> 3 1980-12-16 25.3792 25.3792 25.2448 25.2448         0.0869 105728000   AAPL
+#> 4 1980-12-17 25.8720 26.0064 25.8720 25.8720         0.0891  86441600   AAPL
+#> 5 1980-12-18 26.6336 26.7456 26.6336 26.6336         0.0917  73449600   AAPL
+#> 6 1980-12-19 28.2464 28.3808 28.2464 28.2464         0.0972  48630400   AAPL
 #>   exchange ret_adj_close
 #> 1       US            NA
-#> 2       US   -0.05151515
-#> 3       US   -0.07348243
-#> 4       US    0.02528736
-#> 5       US    0.02914798
-#> 6       US    0.05991285
+#> 2       US   -0.05156724
+#> 3       US   -0.07356077
+#> 4       US    0.02531646
+#> 5       US    0.02918070
+#> 6       US    0.05997819
 ```
 
 ``` r
@@ -140,8 +140,8 @@ exchange <- "US"
 df_div <- eodhdR2::get_dividends(ticker, exchange)
 #> 
 #> ── retrieving dividends for ticker AAPL|US ─────────────────────────────────────
-#> ! Quota status: 94945|10000000, refreshing in 6.56 hours
-#> ℹ cache file '/tmp/Rtmperw7sw/eodhdR2-cache/AAPL_US_eodhd_dividends.rds' saved
+#> ! Quota status: 63467|10000000, refreshing in 5.8 hours
+#> ℹ cache file AAPL_US_eodhd_dividends.rds saved
 #> ✔ got 84 rows of dividend data
 
 head(df_div)
@@ -185,7 +185,7 @@ exchange <- "US"
 l_fun <- eodhdR2::get_fundamentals(ticker, exchange)
 #> 
 #> ── retrieving fundamentals for ticker AAPL|US ──────────────────────────────────
-#> ! Quota status: 94958|10000000, refreshing in 6.56 hours
+#> ! Quota status: 63469|10000000, refreshing in 5.8 hours
 #> ✔ querying API
 #> ✔ got 13 elements in raw list
 
@@ -213,18 +213,18 @@ wide_financials <- eodhdR2::parse_financials(l_fun, "wide")
 #> ℹ parsing Income_Statement  data
 #> ℹ    quarterly
 #> ℹ    yearly
-#> ✔ got 561 rows of financial data (wide format)
+#> ✔ got 564 rows of financial data (wide format)
 
 head(wide_financials)
 #> # A tibble: 6 × 127
 #>   date       filing_date ticker company_name frequency type_financial
 #>   <date>     <date>      <chr>  <chr>        <chr>     <chr>         
-#> 1 2024-03-31 2024-05-03  AAPL   Apple Inc    quarterly Balance_Sheet 
-#> 2 2023-12-31 2024-02-02  AAPL   Apple Inc    quarterly Balance_Sheet 
-#> 3 2023-09-30 2023-11-03  AAPL   Apple Inc    quarterly Balance_Sheet 
-#> 4 2023-06-30 2023-08-04  AAPL   Apple Inc    quarterly Balance_Sheet 
-#> 5 2023-03-31 2023-05-05  AAPL   Apple Inc    quarterly Balance_Sheet 
-#> 6 2022-12-31 2023-02-03  AAPL   Apple Inc    quarterly Balance_Sheet 
+#> 1 2024-06-30 2024-08-02  AAPL   Apple Inc    quarterly Balance_Sheet 
+#> 2 2024-03-31 2024-05-03  AAPL   Apple Inc    quarterly Balance_Sheet 
+#> 3 2023-12-31 2024-02-02  AAPL   Apple Inc    quarterly Balance_Sheet 
+#> 4 2023-09-30 2023-11-03  AAPL   Apple Inc    quarterly Balance_Sheet 
+#> 5 2023-06-30 2023-08-04  AAPL   Apple Inc    quarterly Balance_Sheet 
+#> 6 2023-03-31 2023-05-05  AAPL   Apple Inc    quarterly Balance_Sheet 
 #> # ℹ 121 more variables: currency_symbol <chr>, totalAssets <dbl>,
 #> #   intangibleAssets <dbl>, earningAssets <dbl>, otherCurrentAssets <dbl>,
 #> #   totalLiab <dbl>, totalStockholderEquity <dbl>, deferredLongTermLiab <dbl>,
@@ -250,17 +250,17 @@ long_financials <- eodhdR2::parse_financials(l_fun, "long")
 #> ℹ parsing Income_Statement  data
 #> ℹ    quarterly
 #> ℹ    yearly
-#> ✔ got 67320 rows of financial data (long format)
+#> ✔ got 67680 rows of financial data (long format)
 
 head(long_financials)
 #> # A tibble: 6 × 9
 #>   date       filing_date ticker company_name frequency type_financial
 #>   <date>     <date>      <chr>  <chr>        <chr>     <chr>         
-#> 1 2024-03-31 2024-05-03  AAPL   Apple Inc    quarterly Balance_Sheet 
-#> 2 2024-03-31 2024-05-03  AAPL   Apple Inc    quarterly Balance_Sheet 
-#> 3 2024-03-31 2024-05-03  AAPL   Apple Inc    quarterly Balance_Sheet 
-#> 4 2024-03-31 2024-05-03  AAPL   Apple Inc    quarterly Balance_Sheet 
-#> 5 2024-03-31 2024-05-03  AAPL   Apple Inc    quarterly Balance_Sheet 
-#> 6 2024-03-31 2024-05-03  AAPL   Apple Inc    quarterly Balance_Sheet 
+#> 1 2024-06-30 2024-08-02  AAPL   Apple Inc    quarterly Balance_Sheet 
+#> 2 2024-06-30 2024-08-02  AAPL   Apple Inc    quarterly Balance_Sheet 
+#> 3 2024-06-30 2024-08-02  AAPL   Apple Inc    quarterly Balance_Sheet 
+#> 4 2024-06-30 2024-08-02  AAPL   Apple Inc    quarterly Balance_Sheet 
+#> 5 2024-06-30 2024-08-02  AAPL   Apple Inc    quarterly Balance_Sheet 
+#> 6 2024-06-30 2024-08-02  AAPL   Apple Inc    quarterly Balance_Sheet 
 #> # ℹ 3 more variables: currency_symbol <chr>, name <chr>, value <dbl>
 ```
