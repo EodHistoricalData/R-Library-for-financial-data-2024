@@ -30,7 +30,7 @@ write_cache <- function(x, f_out) {
 
   readr::write_rds(x, f_out)
 
-  cli::cli_alert_info("cache file {f_out} saved")
+  cli::cli_alert_info("cache file {basename(f_out)} saved")
 
   return(invisible(TRUE))
 
