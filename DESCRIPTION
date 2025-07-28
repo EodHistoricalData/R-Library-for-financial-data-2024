@@ -1,7 +1,7 @@
 Package: eodhdR2
 Type: Package
 Title: Official R API for Fetching Data from 'EODHD'
-Version: 0.5.1
+Version: 0.5.2
 Authors@R: c(
   person(given = c("Marcelo", "S."),
         family = "Perlin",

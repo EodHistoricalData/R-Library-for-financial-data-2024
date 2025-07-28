@@ -17,13 +17,15 @@
 #' set_token(get_demo_token())
 #' df_intraday <- get_intraday(ticker = "AAPL", exchange = "US")
 #' }
-get_intraday <- function(ticker = "AAPL",
-                     exchange = "US",
-                     frequency = "5m",
-                     first_date = Sys.Date() - 7,
-                     last_date = Sys.Date(),
-                     cache_folder = get_default_cache(),
-                     check_quota = TRUE) {
+get_intraday <- function(
+    ticker = "AAPL",
+    exchange = "US",
+    frequency = "5m",
+    first_date = Sys.Date() - 7,
+    last_date = Sys.Date(),
+    cache_folder = get_default_cache(),
+    check_quota = TRUE
+    ) {
 
   cli::cli_h1("retrieving intraday data for ticker {ticker}|{exchange}")
 
@@ -52,7 +54,7 @@ get_intraday <- function(ticker = "AAPL",
   last_time <- as.POSIXlt(
     paste0(last_date, " 23:59:59 UTC"),
     tz = "GMT"
-    )
+  )
 
   first_time <- as.POSIXlt(
     paste0(last_date - lubridate::days(offset_delta),
