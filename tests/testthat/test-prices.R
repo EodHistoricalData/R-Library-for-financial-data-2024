@@ -1,6 +1,6 @@
 test_that("prices", {
 
-  # test relies on calling api (we skip it on cran to save network bandwith)
+  # test relies on calling api (we skip it on cran to save network bandwidth)
   skip_if_offline()
   skip_on_cran() # too heavy for cran
 

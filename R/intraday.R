@@ -33,7 +33,7 @@ get_intraday <- function(ticker = "AAPL",
 
   token <- get_token()
 
-  possible_freq <- c("1m", "5m", "1hr")
+  possible_freq <- c("1m", "5m", "1h")
   if (!frequency %in% possible_freq) {
     cli::cli_abort("value of {frequency} is not available in possible values: {possible_freq}")
   }
@@ -43,7 +43,7 @@ get_intraday <- function(ticker = "AAPL",
     frequency,
     "1m" = 120, # days
     "5m" = 600,
-    "1hr" = 7200
+    "1h" = 7200 # original is 7200
   )
 
   # get lower rate than limit for avoiding too much ping
@@ -54,7 +54,11 @@ get_intraday <- function(ticker = "AAPL",
     tz = "GMT"
     )
 
-  first_time <- last_time - lubridate::days(offset_delta)
+  first_time <- as.POSIXlt(
+    paste0(last_date - lubridate::days(offset_delta),
+           " 00:00:01"),
+    tz = "GMT"
+  )
 
   f_out <-get_cache_file(ticker, exchange, cache_folder,
                          paste0("intraday_",
@@ -92,9 +96,8 @@ get_intraday <- function(ticker = "AAPL",
              'api_token={token}&',
              'from={as.numeric(this_first_time)}&',
              'to={as.numeric(this_last_time)}&',
-#             'offset={this_offset}&',
-#             'limit={offset_delta}&',
-             'fmt=json'
+             'fmt=json&',
+             'interval={frequency}'
       )
     )
 
@@ -117,10 +120,13 @@ get_intraday <- function(ticker = "AAPL",
     n_rows <- nrow(this_intraday)
 
     cli::cli_alert_success(
-      "\tfetching period {i_query} | {this_first_time} --> {this_last_time} | got {n_rows} rows"
+      "\t{this_first_time} --> {this_last_time} | got {n_rows} rows"
     )
 
     i_query <- i_query + 1
+
+    # return only unique data
+    this_intraday <- unique(this_intraday)
 
     l_intraday[[i_query]] <- this_intraday
 
