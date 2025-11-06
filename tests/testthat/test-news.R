@@ -7,9 +7,14 @@ test_that("news", {
   suppressMessages({
     set_token()
 
+    last_date <- Sys.Date()
+    first_date <- Sys.Date() - 5
+
     df_news1 <- get_news(
       ticker = "AAPL",
-      exchange = "US"
+      exchange = "US",
+      first_date = first_date,
+      last_date = last_date
     )
 
     expect_true(nrow(df_news1) > 0)
@@ -17,7 +22,9 @@ test_that("news", {
     # run it again for testing local cache
     df_news2 <- get_news(
       ticker = "AAPL",
-      exchange = "US"
+      exchange = "US",
+      first_date = first_date,
+      last_date = last_date
     )
 
     expect_true(identical(df_news1, df_news2))

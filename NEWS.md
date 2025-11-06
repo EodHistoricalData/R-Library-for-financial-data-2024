@@ -1,3 +1,8 @@
+## Version 0.6 (2025-11-06)
+
+- implemented `get_index_composition()`, a function to fetch index composition from eodhd
+- fixed slow tests for `get_news()`
+
 ## Version 0.5.2 (2025-07-28)
 
 - implemented `get_intraday()`, a function to download intraday prices from eodhd
