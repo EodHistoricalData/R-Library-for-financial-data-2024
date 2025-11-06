@@ -47,7 +47,11 @@ get_index_composition <- function(index, cache_folder = get_default_cache()) {
 
     historical_components <- l_json$HistoricalTickerComponents |>
       purrr::map(list_to_tibble) |>
-      purrr::list_rbind()
+      purrr::list_rbind() |>
+      dplyr::mutate(
+        StartDate = as.Date(StartDate),
+        EndDate = as.Date(EndDate)
+      )
 
     l_out <- list(
       info = info,
