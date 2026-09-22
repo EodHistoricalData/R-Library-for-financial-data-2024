@@ -39,7 +39,11 @@ get_exchanges <- function(cache_folder = get_default_cache()) {
 
     content <- query_api(url)
 
-    df_exc <- jsonlite::fromJSON(content)
+    if (is_empty_body(content)) {
+      df_exc <- dplyr::tibble()
+    } else {
+      df_exc <- jsonlite::fromJSON(content)
+    }
 
     write_cache(df_exc, f_out)
 

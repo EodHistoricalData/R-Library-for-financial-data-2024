@@ -63,7 +63,12 @@ get_fundamentals <- function(ticker = "AAPL",
                              "text",
                              encoding = "UTF-8")
 
-    l_out <- jsonlite::fromJSON(content)
+    if (is_empty_body(content)) {
+      l_out <- list()
+    } else {
+      l_out <- jsonlite::fromJSON(content)
+    }
+
     readr::write_rds(l_out, f_out)
   }
 

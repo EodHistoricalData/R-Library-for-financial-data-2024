@@ -32,7 +32,11 @@ get_tickers <- function(exchange = "US",
 
     content <- query_api(url)
 
-    df_tickers <- jsonlite::fromJSON(content)
+    if (is_empty_body(content)) {
+      df_tickers <- dplyr::tibble()
+    } else {
+      df_tickers <- jsonlite::fromJSON(content)
+    }
 
     write_cache(df_tickers, f_out)
 

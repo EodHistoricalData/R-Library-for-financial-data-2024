@@ -182,6 +182,23 @@ test_that("parse_api_df survives an absent body", {
 
 })
 
+test_that("is_empty_body flags every shape of an empty answer", {
+
+  # httr gives NA for an empty body and character(0) in some cases, while the
+  # api answers "[]" or "{}" when nothing matched
+  expect_true(is_empty_body(NA_character_))
+  expect_true(is_empty_body(character(0)))
+  expect_true(is_empty_body(NULL))
+  expect_true(is_empty_body(""))
+  expect_true(is_empty_body("[]"))
+  expect_true(is_empty_body("{}"))
+
+  # a body with data is not empty, and "" is only empty when it stands alone
+  expect_false(is_empty_body('[{"a":1}]'))
+  expect_false(is_empty_body('{"a":1}'))
+
+})
+
 test_that("get_eodhd keeps the parsed and the raw answer in separate caches", {
 
   skip_if_offline()

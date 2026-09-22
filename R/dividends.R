@@ -43,7 +43,7 @@ get_dividends <- function(ticker = "AAPL", exchange = "US",
 
     content <- query_api(url)
 
-    if (content == "[]") {
+    if (is_empty_body(content)) {
       cli::cli_alert_danger("cant find dividend data for {ticker}|{exchange}")
 
       df_div <- dplyr::tibble()

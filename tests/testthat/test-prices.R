@@ -20,7 +20,7 @@ test_that("prices", {
       exchange = "US"
     )
 
-    expect_true(identical(df_prices2, df_prices2))
+    expect_true(identical(df_prices1, df_prices2))
 
 
   })

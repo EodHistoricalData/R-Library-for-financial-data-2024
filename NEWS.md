@@ -1,3 +1,38 @@
+## Version 0.7.1 (2026-09-22)
+
+Bug fixes over the coverage pass of 0.7.
+
+### Fixes
+
+- `get_news()` compared a `POSIXct` timestamp with a `Date`, which R resolves by
+  comparing the raw numbers (seconds against days). The comparison was always
+  false, so a query never stopped at `first_date` and only ended when the api ran
+  out of news. The dates are compared as dates now, and the timezone is pinned
+- an empty body crashed `get_news()`, `get_dividends()`, `get_splits()` and
+  `get_ipos()`: httr returns `NA_character_` (or a zero length vector) for an
+  empty body, and `if (content == "[]")` cannot test `NA`. The same check now
+  covers every empty shape, and the wrappers that read the response by hand
+  (`get_prices()`, `get_tickers()`, `get_exchanges()`, `get_fundamentals()`,
+  `get_index_composition()`, `get_sentiments()`, `get_news_word_weights()`)
+  return an empty result instead of erroring
+- `get_prices()` errored with "no applicable method for 'mutate'" when the api
+  answered `[]`, instead of returning an empty dataframe
+- `get_ipos()` aborted on an empty answer; it returns an empty dataframe now,
+  like the other calendar wrappers
+- `get_news()` could drop every row of a page when a news item had no `symbols`
+  or `tags`; the symbol, tag and sentiment columns are built from a single parse,
+  and the list index was off by one
+- `get_index_composition()` errored on indices without a
+  `HistoricalTickerComponents` block
+- `set_token()` stored the token before validating it, so a rejected token stayed
+  in `eodhd-token` and was returned by every later `get_token()`
+- the price test compared `df_prices2` with itself, so it could never fail
+
+### Internals
+
+- new `is_empty_body()` helper in `R/utils.R`, reused by the response parser and
+  by the wrappers that read the response by hand
+
 ## Version 0.7 (2026-09-22)
 
 Coverage pass over the eodhd api. The package went from 13 to 60 exported

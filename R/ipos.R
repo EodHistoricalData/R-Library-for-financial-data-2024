@@ -55,17 +55,26 @@ get_ipos <- function(first_date = Sys.Date() - 3*365,
 
   content <- query_api(url)
 
-  if (content == "[]") {
-    cli::cli_abort("cant find ipo data for given dates.")
+  if (is_empty_body(content)) {
+    cli::cli_alert_danger("cant find ipo data for given dates.")
+
+    ipos <- dplyr::tibble()
+
+  } else {
+
+    ipos <- jsonlite::fromJSON(content)$ipos
+
+    if (is.null(ipos) || length(ipos) == 0) {
+      ipos <- dplyr::tibble()
+    } else {
+      ipos <- ipos |>
+        dplyr::mutate(
+          dplyr::across(dplyr::contains('_date'), as.Date)
+        ) |>
+        unique()
+    }
+
   }
-
-  ipos <- jsonlite::fromJSON(content)$ipos
-
-  ipos <- ipos |>
-    dplyr::mutate(
-      dplyr::across(dplyr::contains('_date'), as.Date)
-    ) |>
-    unique()
 
   write_cache(ipos, f_out)
 

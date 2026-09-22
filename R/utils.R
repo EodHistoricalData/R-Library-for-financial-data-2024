@@ -21,6 +21,23 @@ parse_status_code <- function(status_code) {
   return(invisible(TRUE))
 }
 
+#' TRUE when a response body carries no data
+#'
+#' httr gives NA_character_ for an empty body (and a zero length vector in some
+#' cases), while the api answers "[]" or "{}" when nothing matched. Every caller
+#' has to treat all of those as "no data", so the check lives in one place.
+#'
+#' @noRd
+is_empty_body <- function(content) {
+
+  if (!is.character(content) || length(content) != 1L) {
+    return(TRUE)
+  }
+
+  is.na(content) || content %in% c("[]", "{}", "")
+
+}
+
 #' fix null values
 #'
 #' @noRd

@@ -140,7 +140,7 @@ parse_api_df <- function(content, element = NULL) {
 
   # httr gives NA_character_ for an empty body, and the api answers "[]" or "{}"
   # when nothing matched
-  if (length(content) != 1 || is.na(content) || content %in% c("[]", "{}", "")) {
+  if (is_empty_body(content)) {
     return(dplyr::tibble())
   }
 
@@ -328,7 +328,11 @@ get_eodhd <- function(endpoint,
     out <- parse_api_df(content)
     cli::cli_alert_success("got {nrow(out)} rows")
   } else {
-    out <- jsonlite::fromJSON(content)
+    if (is_empty_body(content)) {
+      out <- list()
+    } else {
+      out <- jsonlite::fromJSON(content)
+    }
     cli::cli_alert_success("got a list with {length(out)} elements")
   }
 

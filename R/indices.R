@@ -35,7 +35,13 @@ get_index_composition <- function(index, cache_folder = get_default_cache()) {
       "{get_base_url()}/fundamentals/{index}?api_token={token}&fmt=json"
     )
 
-    l_json <- jsonlite::fromJSON(query_api(url))
+    content <- query_api(url)
+
+    if (is_empty_body(content)) {
+      l_json <- list()
+    } else {
+      l_json <- jsonlite::fromJSON(content)
+    }
 
     info <- l_json$General |>
       purrr::map(fix_elements) |>
@@ -43,15 +49,15 @@ get_index_composition <- function(index, cache_folder = get_default_cache()) {
 
     current_components <- l_json$Components |>
       purrr::map(list_to_tibble) |>
-      purrr::list_rbind()
+      purrr::list_rbind() |>
+      dplyr::as_tibble()
 
+    # not every index carries a component history
     historical_components <- l_json$HistoricalTickerComponents |>
       purrr::map(list_to_tibble) |>
       purrr::list_rbind() |>
-      dplyr::mutate(
-        StartDate = as.Date(StartDate),
-        EndDate = as.Date(EndDate)
-      )
+      dplyr::as_tibble() |>
+      fix_date_cols(c("StartDate", "EndDate"))
 
     l_out <- list(
       info = info,

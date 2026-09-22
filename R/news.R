@@ -68,48 +68,50 @@ get_news <- function(ticker = "AAPL",
 
     content <- query_api(url)
 
-    if (content == "[]") {
+    if (is_empty_body(content)) {
       cli::cli_alert_warning("cant find any more data..")
       break()
     }
 
-    this_news <- jsonlite::fromJSON(content) |>
+    this_news <- jsonlite::fromJSON(content)
+
+    # symbols and tags arrive as arrays, and are pasted into one string per news
+    if ("symbols" %in% names(this_news)) {
+      this_news$symbols <- this_news$symbols |>
+        purrr::map_chr(paste0, collapse = ", ")
+    }
+
+    if ("tags" %in% names(this_news)) {
+      this_news$tags <- this_news$tags |>
+        purrr::map_chr(paste0, collapse = ", ")
+    }
+
+    # the sentiment is a nested object (neg/neu/pos) -- flatten it into columns
+    if ("sentiment" %in% names(this_news)) {
+      sentiment <- this_news$sentiment
+      this_news$sentiment <- NULL
+      names(sentiment) <- paste0("sentiment_", names(sentiment))
+      this_news <- dplyr::bind_cols(this_news, dplyr::as_tibble(sentiment))
+    }
+
+    this_news <- this_news |>
       dplyr::mutate(
+        date = as.POSIXct(date, tz = "UTC"),
         ticker = ticker,
         exchange = exchange
       )
 
-    vec_symbols <- this_news$symbols |>
-      purrr::map_chr(paste0, collapse = ", ")
-
-    vec_tags <- this_news$tags |>
-      purrr::map_chr(paste0, collapse = ", ")
-
-    sentiment <- this_news$sentiment
-    names(sentiment) <- paste0("sentiment_", names(sentiment) )
-
-    this_news <- jsonlite::fromJSON(content) |>
-      dplyr::select(-sentiment) |>
-      dplyr::mutate(
-        date = as.POSIXct(date),
-        ticker = ticker,
-        exchange = exchange,
-        symbols = vec_symbols,
-        tags = vec_tags
-      ) |>
-      dplyr::bind_cols(sentiment)
-
-    query_last_date <- max(this_news$date)
+    query_last_date <- max(as.Date(this_news$date))
     n_rows <- nrow(this_news)
 
     cli::cli_alert_success(
       "\tgot {n_rows} news | last date: {query_last_date}"
       )
 
+    l_news[[i_query]] <- this_news
+
     i_query <- i_query + 1
     this_offset <- this_offset + offset_delta
-
-    l_news[[i_query]] <- this_news
 
     if (query_last_date <= first_date) {
       cli::cli_alert_warning("current date is lower than first date.. exiting loop.")
@@ -125,7 +127,11 @@ get_news <- function(ticker = "AAPL",
 
   write_cache(df_news, f_out)
 
-  cli::cli_alert_success("got {nrow(df_news)} rows of news from {min(df_news$date)} to {max(df_news$date)}")
+  if (nrow(df_news) > 0) {
+    cli::cli_alert_success("got {nrow(df_news)} rows of news from {min(df_news$date)} to {max(df_news$date)}")
+  } else {
+    cli::cli_alert_danger("cant find news for {ticker}|{exchange} between {first_date} and {last_date}")
+  }
 
   return(df_news)
 

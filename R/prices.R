@@ -39,18 +39,27 @@ get_prices <- function(ticker = "AAPL",
 
   content <- query_api(url)
 
-  df_prices <- jsonlite::fromJSON(content) |>
-    dplyr::mutate(
-      ticker = ticker,
-      exchange = exchange
-    ) |>
-    dplyr::mutate(date = as.Date(date),
-                  ret_adj_close = adjusted_close/dplyr::lag(adjusted_close) - 1)
+  if (is_empty_body(content)) {
+    df_prices <- dplyr::tibble()
+  } else {
+    df_prices <- jsonlite::fromJSON(content) |>
+      dplyr::mutate(
+        ticker = ticker,
+        exchange = exchange
+      ) |>
+      dplyr::mutate(date = as.Date(date),
+                    ret_adj_close = adjusted_close/dplyr::lag(adjusted_close) - 1)
+  }
 
   write_cache(df_prices, f_out)
 
   cli::cli_alert_success("got {nrow(df_prices)} rows of prices")
-  cli::cli_alert_info("got daily data from {min(df_prices$date)} to {max(df_prices$date)}")
+
+  if (nrow(df_prices) > 0) {
+    cli::cli_alert_info("got daily data from {min(df_prices$date)} to {max(df_prices$date)}")
+  } else {
+    cli::cli_alert_danger("cant find price data for {ticker}|{exchange}")
+  }
 
   return(df_prices)
 

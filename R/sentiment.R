@@ -48,7 +48,11 @@ get_sentiments <- function(symbols = "AAPL.US",
 
   content <- eodhd_content("sentiments", params)
 
-  l_json <- jsonlite::fromJSON(content, flatten = TRUE)
+  if (is_empty_body(content)) {
+    l_json <- list()
+  } else {
+    l_json <- jsonlite::fromJSON(content, flatten = TRUE)
+  }
 
   df_out <- purrr::imap(
     l_json,
@@ -122,12 +126,20 @@ get_news_word_weights <- function(ticker = "AAPL",
 
   content <- eodhd_content("news-word-weights", params)
 
-  l_json <- jsonlite::fromJSON(content)
+  if (is_empty_body(content)) {
+    l_json <- list()
+  } else {
+    l_json <- jsonlite::fromJSON(content)
+  }
 
-  df_out <- dplyr::tibble(
-    word = names(l_json$data),
-    weight = as.numeric(unlist(l_json$data))
-  )
+  if (is.null(l_json$data)) {
+    df_out <- dplyr::tibble(word = character(), weight = numeric())
+  } else {
+    df_out <- dplyr::tibble(
+      word = names(l_json$data),
+      weight = as.numeric(unlist(l_json$data))
+    )
+  }
 
   write_cache(df_out, f_out)
 

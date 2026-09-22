@@ -107,8 +107,7 @@ get_intraday <- function(
     content <- query_api(url)
 
     # an empty body arrives as NA, and a window with no bars as "[]"
-    if (!is.character(content) || length(content) != 1L ||
-          is.na(content) || content %in% c("[]", "")) {
+    if (is_empty_body(content)) {
       cli::cli_alert_warning("\tno data in this window")
     } else {
 

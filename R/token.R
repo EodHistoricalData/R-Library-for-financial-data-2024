@@ -15,8 +15,6 @@
 #' }
 set_token <- function(token = get_demo_token()) {
 
-  Sys.setenv("eodhd-token" = token)
-
   my_quota <- list()
 
   try({
@@ -28,6 +26,10 @@ set_token <- function(token = get_demo_token()) {
       "Unable to authenticate token at eod. Do you have the right token? Check it at {.url https://eodhd.com/cp/dashboard}"
     )
   }
+
+  # set the token only after it is known to work, so a failed call does not
+  # leave a bad token behind for every later get_token()
+  Sys.setenv("eodhd-token" = token)
 
   cli::cli_alert_success("eodhd API token set")
   cli::cli_alert_info("Account name: {my_quota$name} ({my_quota$email})")
