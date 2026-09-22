@@ -33,15 +33,21 @@ Unicorn Bay marketplace products.
 
 ### Fixes
 
-- `get_splits()` returned the split ratio of the wrong row and dropped the last
-  split of the series
+- every package the code actually calls (cli, dplyr, fs, glue, httr, jsonlite,
+  lubridate, purrr, readr, tidyr) sat in `Suggests`, so a plain
+  `install.packages("eodhdR2")` installed none of them and the first call
+  failed with "there is no package called 'cli'". They are declared in
+  `Imports` now
+- `get_intraday()` did not honour `first_date`: the first window always started
+  `offset_delta` days before `last_date`, and the result was never clipped to
+  the requested range, so a one week query returned three months of bars. A
+  window with no data also ended the walk, silently dropping everything older,
+  and consecutive windows overlapped at the boundary, duplicating bars
 - `get_dividends()` and `get_index_composition()` ignored the configured base url
 - `get_index_composition()` bypassed the shared request handler, so http errors
   were not reported
-- `get_intraday()` ignored `first_date` whenever the window was longer than a
-  single api call, returning only the most recent span
-- the base url carried a trailing slash, producing double slashes in every
-  request path
+- the base url carried a trailing slash while seven of eight call sites added
+  one of their own, producing `https://eodhd.com/api//eod/...`
 - typo in the `set_token()` message
 - the README told readers to run `install.package("eodhdR2")`, which is not a
   function -- reported by a user through support
@@ -55,7 +61,12 @@ Unicorn Bay marketplace products.
 - new shared request layer (`R/api-core.R`) with one parser that handles the
   five response shapes the api uses: arrays, single objects, JSON:API
   envelopes, symbol-keyed objects and columnar payloads
-- test suite grew from 10 to 198 assertions, covering every new family live plus
+- `get_eodhd()` accepts an endpoint written with a leading slash, the way the
+  documentation prints it, and refuses a full url instead of building a
+  nonsense request out of it
+- cache file names are built from a length prefixed encoding of the parameter
+  list, so no two parameter sets can be served each other's cached answer
+- test suite grew from 10 to 211 assertions, covering every new family live plus
   offline tests for the parser, the cache keys and the hash
 
 ## Version 0.6 (2025-11-06)

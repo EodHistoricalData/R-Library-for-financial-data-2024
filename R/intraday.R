@@ -106,7 +106,9 @@ get_intraday <- function(
 
     content <- query_api(url)
 
-    if (content == "[]") {
+    # an empty body arrives as NA, and a window with no bars as "[]"
+    if (!is.character(content) || length(content) != 1L ||
+          is.na(content) || content %in% c("[]", "")) {
       cli::cli_alert_warning("\tno data in this window")
     } else {
 
@@ -136,8 +138,13 @@ get_intraday <- function(
 
   }
 
-  df_intraday <- l_intraday |>
-    purrr::list_rbind()
+  # every window can come back empty, and list_rbind() of an empty list gives a
+  # zero column data frame rather than a tibble
+  if (length(l_intraday) == 0) {
+    df_intraday <- dplyr::tibble()
+  } else {
+    df_intraday <- purrr::list_rbind(l_intraday)
+  }
 
   if (nrow(df_intraday) > 0) {
     df_intraday <- df_intraday |>

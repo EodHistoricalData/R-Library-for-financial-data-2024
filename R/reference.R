@@ -30,8 +30,11 @@ get_search <- function(query,
 
   params <- list(limit = limit, type = type, exchange = exchange)
 
+  # the query is a path segment, not a parameter, so it has to be escaped here
+  query_escaped <- utils::URLencode(query, reserved = TRUE)
+
   df_out <- cached_api_df(
-    endpoint = glue::glue("search/{utils::URLencode(query, reserved = TRUE)}"),
+    endpoint = glue::glue("search/{query_escaped}"),
     params = params,
     cache_folder = cache_folder,
     cache_prefix = glue::glue("search_{gsub('[^A-Za-z0-9]', '', query)}"),
