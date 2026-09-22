@@ -10,7 +10,8 @@ get_user_info()
 a dataframe with one row
 }
 \description{
-Returns the information of \url{https://eodhd.com/api/user}: name, subscription,
+Returns the information of the user api
+(\url{https://eodhd.com/financial-apis/user-api}): name, subscription,
 number of api calls used today and the daily limit.
 }
 \examples{

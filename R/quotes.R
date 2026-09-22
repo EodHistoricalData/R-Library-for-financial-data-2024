@@ -1,7 +1,7 @@
 #' Retrieves delayed real time (live) quotes
 #'
 #' Queries the live/delayed endpoint
-#' <https://eodhd.com/financial-apis/live-realtime-stocks-api> for one or more
+#' <https://eodhd.com/financial-apis/live-ohlcv-stocks-api> for one or more
 #' tickers. The delay depends on the exchange and on your subscription. Live data
 #' is never cached.
 #'
@@ -47,7 +47,9 @@ get_real_time <- function(ticker = "AAPL",
 
 #' Retrieves delayed quotes for US tickers
 #'
-#' Queries <https://eodhd.com/api/us-quote-delayed>, which returns a richer quote
+#' Queries the delayed us quote endpoint
+#' (<https://eodhd.com/financial-apis/live-v2-for-us-stocks-extended-quotes-2025>),
+#' which returns a richer quote
 #' (bid/ask, exchange, company name) than [eodhdR2::get_real_time()], for US
 #' tickers only. Live data is never cached.
 #'
@@ -94,7 +96,7 @@ get_us_quote_delayed <- function(tickers = "AAPL",
 
 #' Retrieves historical tick data
 #'
-#' Queries the tick endpoint <https://eodhd.com/financial-apis/tick-data-api>,
+#' Queries the tick endpoint <https://eodhd.com/financial-apis/us-stock-market-tick-data-api>,
 #' which returns every trade of a symbol within a time window. The window is
 #' given in unix timestamps (seconds), as required by the api.
 #'

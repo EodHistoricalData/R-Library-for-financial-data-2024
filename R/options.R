@@ -1,7 +1,7 @@
 #' Retrieves the symbols with options data
 #'
 #' Queries the Unicorn Bay options data of the eodhd marketplace
-#' <https://eodhd.com/financial-apis/stock-options-data>, and returns the
+#' <https://eodhd.com/marketplace/unicornbay/options>, and returns the
 #' underlying symbols that have contracts available.
 #'
 #' @inheritParams get_fundamentals
@@ -51,7 +51,7 @@ get_options_underlyings <- function(limit = 1000,
 #' Retrieves option contracts
 #'
 #' Queries the contracts of the Unicorn Bay options data
-#' <https://eodhd.com/financial-apis/stock-options-data>. Each row is one
+#' <https://eodhd.com/marketplace/unicornbay/options>. Each row is one
 #' contract, with its strike, expiration, greeks and implied volatility.
 #'
 #' @inheritParams get_fundamentals
@@ -128,7 +128,7 @@ get_options_contracts <- function(underlying_symbol = "AAPL",
 #' Retrieves the end of day prices of option contracts
 #'
 #' Queries the eod endpoint of the Unicorn Bay options data
-#' <https://eodhd.com/financial-apis/stock-options-data>, with one row per
+#' <https://eodhd.com/marketplace/unicornbay/options>, with one row per
 #' contract and trading day.
 #'
 #' @inheritParams get_options_contracts

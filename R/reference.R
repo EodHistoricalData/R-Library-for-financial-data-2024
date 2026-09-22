@@ -1,6 +1,6 @@
 #' Searches for tickers, companies and isins
 #'
-#' Queries the search endpoint <https://eodhd.com/financial-apis/search-api-for-stocks-etfs-mutual-funds-and-indices>,
+#' Queries the search endpoint <https://eodhd.com/financial-apis/search-api-for-stocks-etfs-mutual-funds>,
 #' which accepts a company name, a ticker or an isin and returns the matching
 #' instruments.
 #'

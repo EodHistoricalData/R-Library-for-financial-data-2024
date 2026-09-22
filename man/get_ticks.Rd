@@ -36,7 +36,7 @@ time. If you need speed, just set it to FALSE.}
 A dataframe with tick data
 }
 \description{
-Queries the tick endpoint \url{https://eodhd.com/financial-apis/tick-data-api},
+Queries the tick endpoint \url{https://eodhd.com/financial-apis/us-stock-market-tick-data-api},
 which returns every trade of a symbol within a time window. The window is
 given in unix timestamps (seconds), as required by the api.
 }

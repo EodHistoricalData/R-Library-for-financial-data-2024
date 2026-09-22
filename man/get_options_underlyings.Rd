@@ -28,7 +28,7 @@ A dataframe with one column, underlying_symbol
 }
 \description{
 Queries the Unicorn Bay options data of the eodhd marketplace
-\url{https://eodhd.com/financial-apis/stock-options-data}, and returns the
+\url{https://eodhd.com/marketplace/unicornbay/options}, and returns the
 underlying symbols that have contracts available.
 }
 \examples{

@@ -18,7 +18,9 @@ time. If you need speed, just set it to FALSE.}
 A dataframe with one row per ticker
 }
 \description{
-Queries \url{https://eodhd.com/api/us-quote-delayed}, which returns a richer quote
+Queries the delayed us quote endpoint
+(\url{https://eodhd.com/financial-apis/live-v2-for-us-stocks-extended-quotes-2025}),
+which returns a richer quote
 (bid/ask, exchange, company name) than \code{\link[=get_real_time]{get_real_time()}}, for US
 tickers only. Live data is never cached.
 }

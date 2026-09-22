@@ -58,7 +58,7 @@ A dataframe with the option contracts
 }
 \description{
 Queries the contracts of the Unicorn Bay options data
-\url{https://eodhd.com/financial-apis/stock-options-data}. Each row is one
+\url{https://eodhd.com/marketplace/unicornbay/options}. Each row is one
 contract, with its strike, expiration, greeks and implied volatility.
 }
 \examples{

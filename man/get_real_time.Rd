@@ -28,7 +28,7 @@ A dataframe with one row per ticker
 }
 \description{
 Queries the live/delayed endpoint
-\url{https://eodhd.com/financial-apis/live-realtime-stocks-api} for one or more
+\url{https://eodhd.com/financial-apis/live-ohlcv-stocks-api} for one or more
 tickers. The delay depends on the exchange and on your subscription. Live data
 is never cached.
 }

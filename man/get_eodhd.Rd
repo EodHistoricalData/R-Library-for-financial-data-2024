@@ -34,7 +34,7 @@ a dataframe (or a list, when as_dataframe = FALSE)
 }
 \description{
 A low level escape hatch for the endpoints that do not (yet) have a dedicated
-function in the package. See \url{https://eodhd.com/financial-apis} for the full
+function in the package. See \url{https://eodhd.com/financial-apis/} for the full
 list of endpoints and their parameters. The api token is added for you.
 }
 \examples{

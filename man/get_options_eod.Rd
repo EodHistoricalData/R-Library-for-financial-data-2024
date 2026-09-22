@@ -67,7 +67,7 @@ A dataframe with the end of day prices of the contracts
 }
 \description{
 Queries the eod endpoint of the Unicorn Bay options data
-\url{https://eodhd.com/financial-apis/stock-options-data}, with one row per
+\url{https://eodhd.com/marketplace/unicornbay/options}, with one row per
 contract and trading day.
 }
 \examples{

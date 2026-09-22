@@ -34,7 +34,7 @@ time. If you need speed, just set it to FALSE.}
 A dataframe with the matching instruments
 }
 \description{
-Queries the search endpoint \url{https://eodhd.com/financial-apis/search-api-for-stocks-etfs-mutual-funds-and-indices},
+Queries the search endpoint \url{https://eodhd.com/financial-apis/search-api-for-stocks-etfs-mutual-funds},
 which accepts a company name, a ticker or an isin and returns the matching
 instruments.
 }
