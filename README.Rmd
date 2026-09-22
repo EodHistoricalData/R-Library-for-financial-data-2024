@@ -33,7 +33,7 @@ Package eodhdR2 is the second and backwards incompatible version of [eodhd](http
 
 # Features
 
-- A local caching system that saves all API queries to the disk, improving execution time and reducing api calls on repeated queries.
+- A local caching system that saves API queries to the disk, improving execution time and reducing api calls on repeated queries (live quotes are never cached).
 - A quota management system, informing the user of how much of the API daily quota was used and how much time is left to refresh it.
 - Function for aggregating and organizing financial information into a single dataframe, allowing easier access to clean financial data in the [wide or long format](https://libguides.princeton.edu/R-reshape#:~:text=A%20dataset%20can%20be%20written,repeat%20in%20the%20first%20column.&text=We%20can%20see%20that%20in,value%20in%20the%20first%20column).
 
