@@ -43,6 +43,12 @@ Unicorn Bay marketplace products.
 - the base url carried a trailing slash, producing double slashes in every
   request path
 - typo in the `set_token()` message
+- the README told readers to run `install.package("eodhdR2")`, which is not a
+  function -- reported by a user through support
+
+### Documentation
+
+- the README now lists every exported function by family
 
 ### Internals
 
