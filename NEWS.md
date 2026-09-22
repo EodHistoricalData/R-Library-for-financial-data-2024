@@ -1,4 +1,4 @@
-## Version 0.7.1 (2026-09-22)
+## Version 0.8 (2026-09-22)
 
 Bug fixes over the coverage pass of 0.7.
 
