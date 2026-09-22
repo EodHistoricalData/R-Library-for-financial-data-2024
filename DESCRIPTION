@@ -20,6 +20,7 @@ BugReports: https://github.com/EodHistoricalData/R-Library-for-financial-data-20
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
+Depends: R (>= 4.1.0)
 Imports: 
     cli,
     dplyr,
