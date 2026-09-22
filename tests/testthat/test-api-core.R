@@ -59,6 +59,63 @@ test_that("build_cache_name is sorted, sanitised and bounded", {
 
 })
 
+test_that("build_cache_name separates parameter sets that paste the same", {
+
+  # the elements of a vector used to be pasted with "_", so a value that
+  # already contains the separator could move the boundary without changing
+  # the string
+  expect_false(identical(
+    build_cache_name("bulk", list(symbols = c("A_B", "C"))),
+    build_cache_name("bulk", list(symbols = c("A", "B_C")))
+  ))
+
+  # one value against a vector that concatenates to it
+  expect_false(identical(
+    build_cache_name("bulk", list(symbols = "AB")),
+    build_cache_name("bulk", list(symbols = c("A", "B")))
+  ))
+
+  # a value that ends where the next parameter's name begins
+  expect_false(identical(
+    build_cache_name("eod", list(a = "1", b = "2")),
+    build_cache_name("eod", list(a = "1_b-2"))
+  ))
+
+  # the guard must not make equal inputs differ
+  expect_identical(
+    build_cache_name("bulk", list(symbols = c("A", "B"))),
+    build_cache_name("bulk", list(symbols = c("A", "B")))
+  )
+
+  # the parameter names carry the separators too, so they are length prefixed
+  # as well
+  expect_false(identical(
+    build_cache_name("eod", list(`a-1` = "1:1:x")),
+    build_cache_name("eod", list(a = "1", `1:1:x` = character(0)))
+  ))
+
+  # a missing value must not read as the string "NA"
+  expect_false(identical(
+    build_cache_name("eod", list(a = NA_character_)),
+    build_cache_name("eod", list(a = "NA"))
+  ))
+
+  # multibyte values: same character count, different characters, and a
+  # composed character against its decomposed form
+  expect_false(identical(
+    build_cache_name("q", list(s = "\u00e9")),
+    build_cache_name("q", list(s = "\u00e8"))
+  ))
+  expect_false(identical(
+    build_cache_name("q", list(s = "\u00e9")),
+    build_cache_name("q", list(s = "e\u0301"))
+  ))
+
+  # an emoji survives the trip without erroring
+  expect_type(build_cache_name("q", list(s = "\U0001F600")), "character")
+
+})
+
 test_that("parse_api_df handles the shapes of the api", {
 
   # empty payloads
@@ -145,4 +202,43 @@ test_that("get_eodhd keeps the parsed and the raw answer in separate caches", {
     expect_type(l_out, "list")
 
   })
+})
+
+test_that("get_eodhd accepts an endpoint written with a leading slash", {
+
+  skip_if_offline()
+  skip_on_cran()
+  skip_without_paid_token()
+
+  suppressMessages({
+
+    # the base url and the endpoint are pasted with a slash between them, so a
+    # caller who writes the endpoint the way the docs print it used to get a
+    # double slash and a 404
+    df_slash <- get_eodhd("/ust/yield-rates", list(`filter[year]` = 2026),
+                          cache_folder = test_cache(), check_quota = FALSE)
+    expect_s3_class(df_slash, "tbl_df")
+    expect_gt(nrow(df_slash), 0)
+
+  })
+})
+
+test_that("get_eodhd refuses a full url in place of an endpoint", {
+
+  skip_on_cran()
+  skip_without_paid_token()
+
+  # a url would be pasted after the base one and produce a nonsense request
+  # instead of an error the caller can read
+  expect_error(
+    get_eodhd("https://example.org/eod/AAPL.US",
+              cache_folder = test_cache(), check_quota = FALSE),
+    "path, not a url"
+  )
+  expect_error(
+    get_eodhd("//example.org/eod/AAPL.US",
+              cache_folder = test_cache(), check_quota = FALSE),
+    "path, not a url"
+  )
+
 })

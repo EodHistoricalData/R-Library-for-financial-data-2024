@@ -22,6 +22,17 @@ eodhd_content <- function(endpoint, params = list()) {
 
   params[["api_token"]] <- token
 
+  # get_eodhd() is exported, so the endpoint comes from the caller. It is a path
+  # under the base url and nothing else: a full url would be pasted after the
+  # base one and silently produce a nonsense request
+  if (grepl("^[A-Za-z][A-Za-z0-9+.-]*:", endpoint) || grepl("^//", endpoint)) {
+    cli::cli_abort("{.arg endpoint} is a path, not a url: {.val {endpoint}}")
+  }
+
+  # the docs print endpoints with a leading slash, and the base url already
+  # ends where one is added
+  endpoint <- sub("^/+", "", endpoint)
+
   url <- httr::modify_url(
     paste0(get_base_url(), "/", endpoint),
     query = params
@@ -77,9 +88,16 @@ build_cache_name <- function(prefix, params = list()) {
 
   params <- params[order(names(params))]
 
+  # every name and every element is written after its own length, so the string
+  # can be read back apart unambiguously and two different parameter sets can
+  # never produce the same one. Pasting the parts raw does not have that
+  # property: list(c("a_b", "c")) and list(c("a", "b_c")) both read as "a_b_c"
   bits <- paste0(
-    names(params), "-",
-    purrr::map_chr(params, ~ paste0(as.character(.x), collapse = "_"))
+    nchar(names(params)), ":", names(params), "-",
+    purrr::map_chr(params, function(x) {
+      x <- as.character(x)
+      paste0(length(x), ":", paste0(nchar(x), ":", x, collapse = "_"))
+    })
   )
 
   key <- paste(c(prefix, bits), collapse = "_")

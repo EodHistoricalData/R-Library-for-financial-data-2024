@@ -24,9 +24,7 @@ BugReports: https://github.com/EodHistoricalData/R-Library-for-financial-data-20
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-Suggests: 
-    knitr,
-    rmarkdown,
+Imports: 
     cli,
     dplyr,
     fs,
@@ -36,7 +34,10 @@ Suggests:
     lubridate,
     purrr,
     readr,
-    tidyr,
+    tidyr
+Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.1.0
