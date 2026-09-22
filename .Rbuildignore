@@ -5,3 +5,4 @@
 ^\.github$
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
+^CLAUDE\.md$

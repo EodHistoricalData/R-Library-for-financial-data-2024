@@ -2,7 +2,7 @@
 % Please edit documentation in R/intraday.R
 \name{get_intraday}
 \alias{get_intraday}
-\title{Retrieves instraday data for a given ticker and exchange}
+\title{Retrieves intraday data for a given ticker and exchange}
 \usage{
 get_intraday(
   ticker = "AAPL",
@@ -21,10 +21,10 @@ get_intraday(
 
 \item{frequency}{The frequency of the intraday data. Available options: "1m"= 1 minute, "5m" = 5 minutes, "1h" = 1 hour}
 
-\item{first_date}{the first date to fetch news. The function will keep querying the api
+\item{first_date}{the first date of the query window. The function will keep querying the api
 until this date is reached. Default is previous week.}
 
-\item{last_date}{the last date to fetch news. Default is today.}
+\item{last_date}{the last date of the query window. Default is today.}
 
 \item{cache_folder}{A local directory to store cache files. By default, all functions use a temporary path, meaning that the caching system
 is session persistent (it will remove all files when you exit your R session). If you want a persistent caching system, simply point argument
@@ -34,11 +34,14 @@ cache_folder to a local directory in your filesystem. Be aware, however, that a 
 time. If you need speed, just set it to FALSE.}
 }
 \value{
-A dataframe with news events and sentiments
+A dataframe with intraday prices (datetime, open, high, low, close, volume)
 }
 \description{
-This function will query the intraday endpoint of eodhd and return all data for a user
-supplied time period.
+This function will query the intraday endpoint of eodhd
+\url{https://eodhd.com/financial-apis/intraday-historical-data-api} and return all
+bars available within a user supplied time period. Since the api limits how far
+back a single query can reach, the function walks backwards in time, querying
+consecutive windows until the first date is covered.
 }
 \examples{
 \dontrun{

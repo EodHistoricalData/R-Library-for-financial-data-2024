@@ -37,12 +37,36 @@ Package eodhdR2 is the second and backwards incompatible version of [eodhd](http
 - A quota management system, informing the user of how much of the API daily quota was used and how much time is left to refresh it.
 - Function for aggregating and organizing financial information into a single dataframe, allowing easier access to clean financial data in the [wide or long format](https://libguides.princeton.edu/R-reshape#:~:text=A%20dataset%20can%20be%20written,repeat%20in%20the%20first%20column.&text=We%20can%20see%20that%20in,value%20in%20the%20first%20column).
 
+- Wrappers for every main endpoint of the API, from prices and fundamentals to options, macro series and sanctions lists (see Coverage below), plus `get_eodhd()` as a generic interface to any endpoint without a dedicated function.
+
+
+# Coverage
+
+| Family | Functions |
+|---|---|
+| Prices and quotes | `get_prices()`, `get_intraday()`, `get_ticks()`, `get_real_time()`, `get_us_quote_delayed()` |
+| Company data | `get_fundamentals()`, `parse_financials()`, `get_bulk_fundamentals()`, `get_historical_market_cap()`, `get_insider_transactions()` |
+| Corporate actions | `get_dividends()`, `get_splits()`, `get_dividends_calendar()`, `get_splits_calendar()` |
+| Reference data | `get_tickers()`, `get_exchanges()`, `get_exchange_details()`, `get_search()`, `get_screener()`, `get_symbol_change_history()`, `get_id_mapping()`, `get_technical()` |
+| Indices | `get_index_list()`, `get_index_composition()` |
+| Calendars | `get_earnings()`, `get_earnings_trends()`, `get_ipos()`, `get_economic_events()` |
+| News and sentiment | `get_news()`, `get_sentiments()`, `get_news_word_weights()` |
+| Macro and rates | `get_macro_indicator()`, `get_ust_rates()`, `get_policy_rates()`, `get_reference_rates()`, `get_corporate_hqm_yields()`, `get_corporate_cmdi()`, `get_funding_stress_spreads()`, `get_commodities()` |
+| Credit risk | `get_sovereign_credit_ratings()`, `get_sovereign_cds_spreads()`, `get_cds_market_aggregates()`, `get_default_spreads()`, `get_sovereign_risk_premium()` |
+| Real estate | `get_real_estate()`, `get_real_estate_detailed()`, `get_real_estate_series()`, `get_real_estate_countries()` |
+| Sanctions | `get_sanctions_entities()`, `get_sanctions_vessels()`, `get_sanctions_programs()`, `get_sanctions_sources()` |
+| Options | `get_options_contracts()`, `get_options_eod()`, `get_options_underlyings()` |
+| Bulk | `get_bulk_eod()`, `get_bulk_fundamentals()` |
+| Session and account | `set_token()`, `get_demo_token()`, `get_user_info()` |
+| Anything else | `get_eodhd()` |
+
+Some endpoints are only available on particular subscriptions. A call to an endpoint outside your plan returns an explicit error from the API, not empty data.
 
 # Installation
 
 ```{r, eval=FALSE}
 # available in CRAN
-install.package("eodhdR2")
+install.packages("eodhdR2")
 
 # development version
 devtools::install_github("EodHistoricalData/R-Library-for-financial-data-2024")

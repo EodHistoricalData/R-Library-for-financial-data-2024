@@ -32,10 +32,10 @@ get_index_composition <- function(index, cache_folder = get_default_cache()) {
   } else {
 
     url <- glue::glue(
-      "https://eodhd.com/api/fundamentals/{index}?api_token={token}"
+      "{get_base_url()}/fundamentals/{index}?api_token={token}&fmt=json"
     )
 
-    l_json <- jsonlite::fromJSON(url)
+    l_json <- jsonlite::fromJSON(query_api(url))
 
     info <- l_json$General |>
       purrr::map(fix_elements) |>
@@ -85,6 +85,40 @@ list_to_tibble <- function(l_in) {
   )
 
   df_out <- dplyr::as_tibble(l_fixed)
+
+  return(df_out)
+
+}
+
+#' Retrieves the list of indices with composition data
+#'
+#' Queries the S&P Global data of the eodhd marketplace and returns the indices
+#' that have components available for [eodhdR2::get_index_composition()].
+#'
+#' @inheritParams get_fundamentals
+#'
+#' @return A dataframe with the available indices
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' set_token("YOUR_VALID_TOKEN")
+#' df_indices <- get_index_list()
+#' }
+get_index_list <- function(cache_folder = get_default_cache(),
+                           check_quota = TRUE) {
+
+  cli::cli_h1("retrieving list of indices")
+
+  df_out <- cached_api_df(
+    endpoint = "mp/unicornbay/spglobal/list",
+    params = list(),
+    cache_folder = cache_folder,
+    cache_prefix = "index-list",
+    check_quota = check_quota
+  )
+
+  cli::cli_alert_success("got {nrow(df_out)} index{?es}")
 
   return(df_out)
 

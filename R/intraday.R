@@ -1,15 +1,18 @@
-#' Retrieves instraday data for a given ticker and exchange
+#' Retrieves intraday data for a given ticker and exchange
 #'
-#' This function will query the intraday endpoint of eodhd and return all data for a user
-#' supplied time period.
+#' This function will query the intraday endpoint of eodhd
+#' <https://eodhd.com/financial-apis/intraday-historical-data-api> and return all
+#' bars available within a user supplied time period. Since the api limits how far
+#' back a single query can reach, the function walks backwards in time, querying
+#' consecutive windows until the first date is covered.
 #'
 #' @inheritParams get_fundamentals
 #' @param frequency The frequency of the intraday data. Available options: "1m"= 1 minute, "5m" = 5 minutes, "1h" = 1 hour
-#' @param first_date the first date to fetch news. The function will keep querying the api
+#' @param first_date the first date of the query window. The function will keep querying the api
 #'  until this date is reached. Default is previous week.
-#' @param last_date the last date to fetch news. Default is today.
+#' @param last_date the last date of the query window. Default is today.
 #'
-#' @return A dataframe with news events and sentiments
+#' @return A dataframe with intraday prices (datetime, open, high, low, close, volume)
 #' @export
 #'
 #' @examples
@@ -40,7 +43,15 @@ get_intraday <- function(
     cli::cli_abort("value of {frequency} is not available in possible values: {possible_freq}")
   }
 
-  # from website https://eodhd.com/financial-apis/intraday-historical-data-api
+  first_date <- as.Date(first_date)
+  last_date <- as.Date(last_date)
+
+  if (first_date > last_date) {
+    cli::cli_abort("first_date ({first_date}) is higher than last_date ({last_date})")
+  }
+
+  # maximum span of a single query, from
+  # https://eodhd.com/financial-apis/intraday-historical-data-api
   offset_delta = switch (
     frequency,
     "1m" = 120, # days
@@ -50,17 +61,6 @@ get_intraday <- function(
 
   # get lower rate than limit for avoiding too much ping
   offset_delta <- as.integer(offset_delta*0.75)
-
-  last_time <- as.POSIXlt(
-    paste0(last_date, " 23:59:59 UTC"),
-    tz = "GMT"
-  )
-
-  first_time <- as.POSIXlt(
-    paste0(last_date - lubridate::days(offset_delta),
-           " 00:00:01"),
-    tz = "GMT"
-  )
 
   f_out <-get_cache_file(ticker, exchange, cache_folder,
                          paste0("intraday_",
@@ -75,25 +75,26 @@ get_intraday <- function(
     return(df_out)
   }
 
+  target_first_time <- as.POSIXct(paste0(first_date, " 00:00:00"), tz = "GMT")
+  target_last_time <- as.POSIXct(paste0(last_date, " 23:59:59"), tz = "GMT")
+
+  # the first window never reaches further back than first_date
+  this_last_time <- target_last_time
+  this_first_time <- max(
+    target_first_time,
+    this_last_time - lubridate::days(offset_delta)
+  )
+
   i_query <- 1
   l_intraday <- list()
   while (TRUE) {
 
-    if (i_query == 1) {
-      cli::cli_alert_info("query #{i_query}")
-      this_first_time = first_time
-      this_last_time = last_time
-
-    } else {
-      cli::cli_alert_info("query #{i_query} | offset = {offset_delta} days")
-
-      this_first_time = this_first_time - lubridate::days(offset_delta)
-      this_last_time = this_last_time -  lubridate::days(offset_delta)
-
-    }
+    cli::cli_alert_info(
+      "query #{i_query} | {as.Date(this_first_time)} --> {as.Date(this_last_time)}"
+      )
 
     url <- glue::glue(
-      paste0('{get_base_url()}intraday/',
+      paste0('{get_base_url()}/intraday/',
              '{ticker}.{exchange}?',
              'api_token={token}&',
              'from={as.numeric(this_first_time)}&',
@@ -106,49 +107,56 @@ get_intraday <- function(
     content <- query_api(url)
 
     if (content == "[]") {
-      cli::cli_alert_warning("cant find any more data.. exiting loop")
+      cli::cli_alert_warning("\tno data in this window")
+    } else {
+
+      this_intraday <- jsonlite::fromJSON(content) |>
+        dplyr::mutate(
+          ticker = ticker,
+          exchange = exchange
+        )
+
+      this_intraday$datetime <- lubridate::ymd_hms(this_intraday$datetime, tz = "GMT")
+
+      cli::cli_alert_success("\tgot {nrow(this_intraday)} rows")
+
+      l_intraday[[i_query]] <- unique(this_intraday)
+    }
+
+    if (this_first_time <= target_first_time) {
       break()
     }
 
-    this_intraday <- jsonlite::fromJSON(content) |>
-      dplyr::mutate(
-        ticker = ticker,
-        exchange = exchange
-      )
-
-    this_intraday$datetime <- lubridate::ymd_hms(this_intraday$datetime, tz = "GMT")
-    query_first_date <- min(as.Date(this_intraday$datetime))
-
-    n_rows <- nrow(this_intraday)
-
-    cli::cli_alert_success(
-      "\t{this_first_time} --> {this_last_time} | got {n_rows} rows"
+    this_last_time <- this_first_time - 1
+    this_first_time <- max(
+      target_first_time,
+      this_last_time - lubridate::days(offset_delta)
     )
-
     i_query <- i_query + 1
-
-    # return only unique data
-    this_intraday <- unique(this_intraday)
-
-    l_intraday[[i_query]] <- this_intraday
-
-    if (query_first_date <= first_date) {
-      cli::cli_alert_warning("current date is lower than first date.. exiting loop.")
-
-      break()
-
-    }
 
   }
 
   df_intraday <- l_intraday |>
     purrr::list_rbind()
 
+  if (nrow(df_intraday) > 0) {
+    df_intraday <- df_intraday |>
+      dplyr::filter(
+        datetime >= target_first_time,
+        datetime <= target_last_time
+      ) |>
+      unique() |>
+      dplyr::arrange(datetime)
+  }
+
   write_cache(df_intraday, f_out)
 
-  cli::cli_alert_success("got {nrow(df_intraday)} rows of intraday data from {min(df_intraday$datetime)} to {max(df_intraday$datetime)}")
+  if (nrow(df_intraday) == 0) {
+    cli::cli_alert_danger("cant find intraday data for {ticker}|{exchange} between {first_date} and {last_date}")
+  } else {
+    cli::cli_alert_success("got {nrow(df_intraday)} rows of intraday data from {min(df_intraday$datetime)} to {max(df_intraday$datetime)}")
+  }
 
   return(df_intraday)
 
 }
-

@@ -37,7 +37,7 @@ set_token <- function(token = get_demo_token()) {
   if (token == get_demo_token()) {
     cat('\n')
     cli::cli_alert_danger(
-      "You are using a **DEMONSTRATION** token for testing pourposes, with
+      "You are using a **DEMONSTRATION** token for testing purposes, with
       limited access to the data repositories. See {.url https://eodhd.com/}
       for registration and, after finding your token, use it with
       function eodhdR2::set_token(\"TOKEN\").")
