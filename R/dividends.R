@@ -38,7 +38,7 @@ get_dividends <- function(ticker = "AAPL", exchange = "US",
 
   } else {
     url <- glue::glue(
-      'https://eodhd.com/api/div/{ticker}.{exchange}?api_token={token}&fmt=json'
+      '{get_base_url()}/div/{ticker}.{exchange}?api_token={token}&fmt=json'
       )
 
     content <- query_api(url)

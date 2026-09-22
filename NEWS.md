@@ -1,3 +1,57 @@
+## Version 0.7 (2026-09-22)
+
+Coverage pass over the eodhd api. The package went from 13 to 60 exported
+functions, and the wrappers now cover every core endpoint family plus the
+Unicorn Bay marketplace products.
+
+### New functions
+
+- quotes and prices: `get_real_time()`, `get_us_quote_delayed()`, `get_ticks()`,
+  `get_bulk_eod()`, `get_historical_market_cap()`, `get_technical()`
+- reference data: `get_search()`, `get_exchange_details()`,
+  `get_symbol_change_history()`, `get_id_mapping()`, `get_screener()`,
+  `get_index_list()`
+- calendars: `get_earnings()`, `get_earnings_trends()`, `get_splits_calendar()`,
+  `get_dividends_calendar()`
+- sentiment: `get_sentiments()`, `get_news_word_weights()`
+- macro and rates: `get_macro_indicator()`, `get_economic_events()`,
+  `get_commodities()`, `get_ust_rates()`, `get_policy_rates()`,
+  `get_reference_rates()`, `get_funding_stress_spreads()`
+- credit risk: `get_sovereign_risk_premium()`, `get_sovereign_credit_ratings()`,
+  `get_sovereign_cds_spreads()`, `get_default_spreads()`, `get_corporate_cmdi()`,
+  `get_corporate_hqm_yields()`, `get_cds_market_aggregates()`
+- real estate: `get_real_estate_countries()`, `get_real_estate()`,
+  `get_real_estate_detailed()`, `get_real_estate_series()`
+- sanctions: `get_sanctions_entities()`, `get_sanctions_vessels()`,
+  `get_sanctions_programs()`, `get_sanctions_sources()`
+- options (Unicorn Bay): `get_options_underlyings()`, `get_options_contracts()`,
+  `get_options_eod()`
+- bulk and insider: `get_bulk_fundamentals()`, `get_insider_transactions()`
+- account: `get_user_info()`
+- `get_eodhd()`, an escape hatch that queries any endpoint the package does not
+  wrap yet, with the same token, cache and quota handling
+
+### Fixes
+
+- `get_splits()` returned the split ratio of the wrong row and dropped the last
+  split of the series
+- `get_dividends()` and `get_index_composition()` ignored the configured base url
+- `get_index_composition()` bypassed the shared request handler, so http errors
+  were not reported
+- `get_intraday()` ignored `first_date` whenever the window was longer than a
+  single api call, returning only the most recent span
+- the base url carried a trailing slash, producing double slashes in every
+  request path
+- typo in the `set_token()` message
+
+### Internals
+
+- new shared request layer (`R/api-core.R`) with one parser that handles the
+  five response shapes the api uses: arrays, single objects, JSON:API
+  envelopes, symbol-keyed objects and columnar payloads
+- test suite grew from 10 to 198 assertions, covering every new family live plus
+  offline tests for the parser, the cache keys and the hash
+
 ## Version 0.6 (2025-11-06)
 
 - implemented `get_index_composition()`, a function to fetch index composition from eodhd

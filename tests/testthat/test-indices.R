@@ -4,13 +4,9 @@ test_that("indices", {
   skip_if_offline()
   skip_on_cran() # too heavy for cran
 
-  suppressMessages({
-    set_token()
+  skip_without_paid_token()
 
-    skip_if(
-      get_token() == get_demo_token(),
-      "Found a test/demo token, which does not allow for fetching index composition"
-      )
+  suppressMessages({
 
     l_out1 <- get_index_composition("GSPC.INDX")
 
@@ -21,6 +17,22 @@ test_that("indices", {
 
     expect_true(identical(l_out1, l_out2))
 
+
+  })
+})
+
+test_that("index list", {
+
+  skip_if_offline()
+  skip_on_cran()
+  skip_without_paid_token()
+
+  suppressMessages({
+
+    df_list <- get_index_list(cache_folder = test_cache(), check_quota = FALSE)
+
+    expect_true(nrow(df_list) > 0)
+    expect_true("Code" %in% names(df_list))
 
   })
 })
