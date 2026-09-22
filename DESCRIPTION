@@ -3,19 +3,15 @@ Type: Package
 Title: Official R API for Fetching Data from 'EODHD'
 Version: 0.7
 Authors@R: c(
-  person(given = "Alex",
-        family = "Pletnev",
-        role = "cre",
-        email = "a.pletnev@eodhistoricaldata.com"),
   person(given = c("Marcelo", "S."),
         family = "Perlin",
-        role = c("aut", "ctr"),
+        role = c("aut", "cre", "ctr"),
         email = "marceloperlin@gmail.com"),
   person(given = "Unicorn Data Services",
          role = "cph",
          email = "support@eodhistoricaldata.com")
   )
-Maintainer: Alex Pletnev <a.pletnev@eodhistoricaldata.com>
+Maintainer: Marcelo S. Perlin <marceloperlin@gmail.com>
 Description: Second and backward-incompatible version of R package 'eodhd' <https://eodhd.com/>, extended with a cache and quota system, 
  also offering functions for cleaning and aggregating the financial data. 
 License: MIT + file LICENSE

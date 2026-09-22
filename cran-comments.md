@@ -1,14 +1,8 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
-The note is the expected "New maintainer / Old maintainer(s)" one.
-
-* This is an update, and a change of maintainer: the package moves from
-  Marcelo S. Perlin, who wrote it under contract and stays on as author, to
-  Alex Pletnev at EODHD, the company that owns the API the package serves.
-  The previous maintainer has been asked to confirm the handover by email.
-* checked locally with `R CMD check --as-cran` on macOS (R 4.6.1): 1 NOTE, the maintainer change
+* checked locally with `R CMD check --as-cran` on macOS (R 4.6.1): Status OK
 * tested on [github action](https://github.com/EodHistoricalData/R-Library-for-financial-data-2024/actions),
   passing for windows (latest), macos (latest), ubuntu (latest) and ubuntu (devel)
 
